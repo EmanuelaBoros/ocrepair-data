@@ -39,6 +39,22 @@ Data is available:
 - **11.03.2026**: Hot fix for `impresso-snippets` dataset | **Release tag** [v0.9.1](https://github.com/hipe-eval/HIPE-OCRepair-2026-data/releases/tag/v0.9.1)
 - **02.03.2026**: First data release with `overproof`, `icdar17`, `impresso-nzz` and `impresso-snippets` | **Release tag** [v0.9](https://github.com/hipe-eval/HIPE-OCRepair-2026-data/releases/tag/v0.9)
 
+### Versions in this repository
+
+The release history above describes the **official HIPE-OCRepair-2026 competition data**. This repository also contains additional, unofficial work on top of it, organised in `data/` by version:
+
+| Folder | Content |
+|--------|---------|
+| `data/v0.9/` | The official competition data as released (`dta19`, `icdar2017`, `impresso-nzz`, `impresso-snippets`, `overproof`, all languages). **Unchanged.** |
+| `data/v0.95/` | Data held back for now, to be checked later: `de-to-check/` (the German datasets `dta19`, `impresso-nzz` and `impresso-snippets/de`, with reference corrections, plus the ICDAR 2019 German sub-collections that overlap with them) and `other-languages/` (the other ICDAR 2019 languages, see below). |
+| `data/v1.0/` | Current working version, **English and French only**: `icdar2017`, `impresso-snippets`, `overproof` and the added `icdar2019`. In the references of `impresso-snippets` and `overproof` the hyphenation mark `¬` is written as `-`. |
+
+#### ICDAR 2019 post-OCR data
+
+After the competition data, we added the data of the [ICDAR 2019 Competition on Post-OCR Text Correction](https://zenodo.org/record/3515403) (Rigaud, Doucet, Coustaty and Moreux, 2019), converted to the same `jsonl` format, keeping the competition's own train/test split. Its sub-collections come from different sources with different licenses (from CC0 to CC BY-NC-ND). `data/v1.0/icdar2019/` has the English and French parts; see [`data/v1.0/icdar2019/README.md`](data/v1.0/icdar2019/README.md) for sources and licenses, and [`scripts/convert_icdar2019.py`](scripts/convert_icdar2019.py) for the conversion. The other languages are in `data/v0.95/other-languages/icdar2019/`.
+
+These additional versions are not official competition releases and have no release tags.
+
 ## 🎓 Citation
 
 ### Competition Report
