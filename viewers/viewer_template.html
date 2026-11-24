@@ -1,0 +1,92 @@
+<!doctype html><html><head><meta charset="utf-8"><title>OCR word labels</title><style>
+body{font:15px/1.5 -apple-system,Helvetica,Arial,sans-serif;margin:0;background:#fafafa;color:#111;display:flex;flex-direction:column;height:100vh}
+header{background:#fff;border-bottom:1px solid #ddd;padding:10px 18px}
+button{font-size:14px;margin-right:8px;padding:3px 6px}
+#wrap{flex:1;display:grid;grid-template-columns:200px 250px 1fr 270px;min-height:0}
+.lst{overflow:auto;background:#fff;border-right:1px solid #ddd;padding:6px 0}
+h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#666}
+.lst h3{padding:4px 12px;margin:0}
+.it{padding:4px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f0f0f0}
+.it:hover{background:#f3f3f3}.it.sel{background:#e4e4e4;font-weight:600}.it small{color:#777;display:block;font-weight:400}
+.it.ed{border-left:3px solid #d97706}.it.ok{border-left:3px solid #16a34a;background:#f0fdf4}
+.grp{padding:6px 12px 2px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#888}
+main{overflow:auto;padding:18px}
+.box{background:#fff;border:1px solid #ddd;border-radius:6px;padding:14px 16px;margin-bottom:14px;white-space:pre-wrap;word-wrap:break-word}
+.w{border-radius:3px;padding:0 1px;cursor:default}.u{}.e{background:#f5b7b1}.r{background:#aed6f1}.i{background:#f9e79f;outline:1px solid #d4ac0d}.d{background:#fadbd8;outline:1px dashed #c0392b}
+.dim .u{opacity:.45}.leg span{display:inline-block;margin-right:14px;padding:0 6px;border-radius:3px}
+.stats{color:#555;font-size:13px;margin-top:6px}
+#sus{border-right:0;border-left:1px solid #ddd}.sit{padding:5px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:13px}.sit:hover{background:#f3f3f3}
+.sit b{font-family:ui-monospace,Menlo,monospace}.sit small{color:#777;display:block}.sit .rc{color:#b45309}.llm{border-top:2px solid #6366f1}.llm h3{color:#4338ca}.cf{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px}.cf.high{background:#fee2e2;color:#991b1b}.cf.medium{background:#fef3c7;color:#92400e}.cf.low{background:#e5e7eb;color:#374151}.lt{font-family:ui-monospace,Menlo,monospace}.sgs{margin-top:3px}button.sg{font:12px ui-monospace,Menlo,monospace;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1px 6px;margin:2px 4px 0 0;cursor:pointer}button.sg:hover{background:#dcfce7}
+.w.sus{text-decoration:underline wavy #d97706;text-underline-offset:3px}.w.flash{outline:3px solid #f59e0b;background:#fde68a!important}
+#ref:focus{box-shadow:0 0 0 2px #93c5fd;border-radius:3px}#done.on{background:#16a34a;color:#fff}
+</style></head><body>
+<header><button id=prev>&larr;</button><button id=next>&rarr;</button> <label>version <input id=ver value="/*NEXT*/" size=6></label> <button id=save>Save corrections</button> <button id=revert>Revert this unit</button> <button id=done>Mark unit fully corrected</button> <span id=msg style="color:#555;font-size:13px"></span>
+<label><input type=checkbox id=dim checked> dim unchanged words</label>
+<div class=leg style="margin-top:6px"><span class=e>edited</span><span class=r>retokenised (segmentation only)</span><span class=i>inserted (OCR only)</span><span class=d>missing from OCR (reference only)</span><span>unchanged</span><span style="text-decoration:underline wavy #d97706;text-underline-offset:3px">possibly wrong in reference</span></div>
+<div class=stats id=stats></div></header>
+<div id=wrap><div class=lst id=cols></div><div class=lst id=units></div>
+<main><div class=box><h3>OCR (coloured by class)</h3><div id=ocr></div></div><div class=box><h3>Reference (coloured by how OCR did) &mdash; click to edit</h3><div id=ref contenteditable=plaintext-only spellcheck=false style="outline:none"></div></div></main><div class=lst id=sus></div></div>
+<script src="viewer_data/llm_review.js"></script>
+<script>
+const LLM=window.LLM||[],llmFor=u=>LLM.filter(e=>e.id==u.id&&e.k==cur);
+const INDEX=/*INDEX*/[],BASE=/*BASE*/;window.D=window.D||{};
+const $=i=>document.getElementById(i);
+const names={u:"unchanged",e:"edited",r:"retokenised",i:"inserted",d:"missing from OCR"};
+const rtitle={u:"correct, matches OCR",r:"correct, OCR split/merged it",e:"correct word the OCR got wrong",d:"correct word missing from the OCR"};
+const EK="ocrepair-ref-edits",CK="ocrepair-ref-done";
+let E=JSON.parse(localStorage.getItem(EK)||"{}"),C=JSON.parse(localStorage.getItem(CK)||"{}");
+const persist=()=>{localStorage.setItem(EK,JSON.stringify(E));localStorage.setItem(CK,JSON.stringify(C))};
+let cur=null,ui=0;
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const units=()=>D[cur]||[];
+const uk=u=>u.src+"#"+u.id;
+function renderCols(){let h="",last="";for(const x of INDEX){if(x.ds!==last){h+=`<div class=grp>${x.ds}</div>`;last=x.ds}
+h+=`<div class="it${x.k==cur?" sel":""}" data-k="${x.k}">${x.split}<small>${x.n} units</small></div>`}$("cols").innerHTML="<h3>Collection / split</h3>"+h}
+function renderUnits(){const us=units();$("units").innerHTML=`<h3>Units (${us.length})</h3>`+us.map((u,i)=>{const n=u.w.filter(x=>x[2]!="u").length;
+return `<div class="it${i==ui?" sel":""}${E[uk(u)]!==undefined?" ed":""}${C[uk(u)]?" ok":""}" data-i="${i}">${i+1}. ${u.id}<small>${n} errors${C[uk(u)]?" ✔ corrected":""}</small></div>`}).join("")}
+function show(){const u=units()[ui];if(!u)return;let h="",p=0;
+for(const [s,e,c] of u.w){h+=esc(u.ocr.slice(p,s))+`<span class="w ${c}" title="${names[c]}">${esc(u.ocr.slice(s,e))}</span>`;p=e}
+h+=esc(u.ocr.slice(p));$("ocr").innerHTML=h;$("ocr").className=$("dim").checked?"dim":"";
+const ed=E[uk(u)];if(ed!==undefined){$("ref").textContent=ed;$("ref").className="";$("msg").textContent="edited (colours hidden)"}
+else{$("msg").textContent="";const sm=new Set(u.sus.map(x=>x[0]));let g="",q=0;for(const [s,e,c] of u.rw){g+=esc(u.ref.slice(q,s))+`<span class="w ${c}${sm.has(s)?" sus":""}" data-s="${s}" title="${rtitle[c]}">${esc(u.ref.slice(s,e))}</span>`;q=e}
+g+=esc(u.ref.slice(q));$("ref").innerHTML=g;$("ref").className=$("dim").checked?"dim":""}
+const n={};u.w.forEach(x=>n[x[2]]=(n[x[2]]||0)+1);$("stats").textContent=u.w.length+" words: "+["u","e","r","i"].map(k=>names[k]+" "+(n[k]||0)).join(", ")+"  |  error rate "+((1-(n.u||0)/u.w.length)*100).toFixed(1)+"%";
+$("done").className=C[uk(u)]?"on":"";$("done").textContent=C[uk(u)]?"✔ Unit fully corrected (click to undo)":"Mark unit fully corrected";
+renderSus(u,ed!==undefined);renderUnits();const s=document.querySelector("#units .sel");if(s)s.scrollIntoView({block:"nearest"})}
+const RC={chars:"odd characters / glued words",near:"one letter from a common word",rare:"seen once; OCR reads it differently"};
+function renderSus(u,edited){$("sus").innerHTML=`<h3>Possibly wrong in reference (${u.sus.length})</h3>`+
+u.sus.slice().sort((a,b)=>(b[3].length>0)-(a[3].length>0)||(b[2].split(",").length-a[2].split(",").length)||a[0]-b[0]).map(x=>`<div class=sit data-s="${x[0]}"><b>${esc(u.ref.slice(x[0],x[1]))}</b><small class=rc>${x[2].split(",").map(c=>RC[c]).join("; ")}</small>${x[3].length?`<div class=sgs>${x[3].map((v,i)=>`<button class=sg data-s="${x[0]}" data-i="${i}" title="click to use this in the reference">${esc(v)}</button>`).join("")}</div>`:""}</div>`).join("")+renderLLM(u)}
+function renderLLM(u){const L=llmFor(u);if(!L.length)return "";return `<div class=llm><h3 style="padding:8px 12px 4px">Reviewed by an LLM (${L.length})</h3>`+L.map((e,i)=>`<div class=sit data-llm="${i}"><span class=lt>${esc(e.find)}</span> &rarr; <span class=lt style="color:#15803d">${esc(e.rep)}</span><span class="cf ${e.conf}">${e.conf}</span><small>${esc(e.why)}</small><div class=sgs><button class=sg data-llm="${i}" title="replace in the reference">apply</button></div></div>`).join("")+"</div>"}
+function applyLLM(u,i){const e=llmFor(u)[i];if(!e)return;const cur=E[uk(u)]!==undefined?E[uk(u)]:u.ref,q=cur.indexOf(e.find);
+if(q<0){$("msg").textContent="could not find \""+e.find+"\" in the (edited) text";return}
+const t=cur.slice(0,q)+e.rep+cur.slice(q+e.find.length);if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();show();$("msg").textContent="applied: \""+e.find+"\" \u2192 \""+e.rep+"\""}
+function applySugg(u,s,i){const x=u.sus.find(y=>y[0]==s);if(!x)return;const tok=u.ref.slice(x[0],x[1]),rep=x[3][i];
+let n=0,p=-1;while((p=u.ref.indexOf(tok,p+1))>=0&&p<x[0])n++;                       // which occurrence of this token it is
+let cur=E[uk(u)]!==undefined?E[uk(u)]:u.ref,q=-1,k=0;for(;;){q=cur.indexOf(tok,q+1);if(q<0||k++==n)break}
+if(q<0){$("msg").textContent="could not find \""+tok+"\" in the edited text";return}
+const t=cur.slice(0,q)+rep+cur.slice(q+tok.length);if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();show();$("msg").textContent="used \""+rep+"\" for \""+tok+"\"; reference now edited"}
+function load(k){return D[k]?Promise.resolve():new Promise((res,rej)=>{const x=INDEX.find(i=>i.k==k),s=document.createElement("script");
+s.src="viewer_data/"+x.f+".js";s.onload=res;s.onerror=()=>rej(new Error("cannot load "+s.src));document.head.appendChild(s)})}
+async function pick(k){$("msg").textContent="loading "+k+" ...";try{await load(k)}catch(e){$("msg").textContent=e.message;return}
+cur=k;ui=0;renderCols();show()}
+$("cols").onclick=e=>{const d=e.target.closest(".it");if(d)pick(d.dataset.k)};
+$("units").onclick=e=>{const d=e.target.closest(".it");if(d){ui=+d.dataset.i;show()}};
+$("sus").onclick=e=>{const b=e.target.closest("button.sg");if(b&&b.dataset.llm!==undefined){applyLLM(units()[ui],+b.dataset.llm);return}
+const L=e.target.closest(".sit[data-llm]");if(L&&!b){const u=units()[ui],en=llmFor(u)[+L.dataset.llm],at=u.ref.indexOf(en.find);let best=null;document.querySelectorAll("#ref .w").forEach(x=>{if(+x.dataset.s<=at)best=x});if(best){document.querySelectorAll("#ref .flash").forEach(x=>x.classList.remove("flash"));best.classList.add("flash");best.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>best.classList.remove("flash"),2500)}return}
+if(b){applySugg(units()[ui],+b.dataset.s,+b.dataset.i);return}
+const d=e.target.closest(".sit");if(!d||d.dataset.s===undefined)return;const el=document.querySelector(`#ref .w[data-s="${d.dataset.s}"]`);
+if(!el)return;document.querySelectorAll("#ref .flash").forEach(x=>x.classList.remove("flash"));el.classList.add("flash");el.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>el.classList.remove("flash"),2500)};
+$("dim").onchange=show;
+$("ref").oninput=()=>{const u=units()[ui],t=$("ref").textContent;if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();$("msg").textContent="edited (colours hidden)";renderUnits()};
+$("revert").onclick=()=>{delete E[uk(units()[ui])];persist();show()};
+$("done").onclick=()=>{const k=uk(units()[ui]);if(C[k])delete C[k];else C[k]=1;persist();show()};
+$("save").onclick=()=>{const v=$("ver").value.trim()||"/*NEXT*/",out={version:v,base:BASE,edits:{},corrected:{}};
+for(const k in E){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.edits[s]=out.edits[s]||{})[id]=E[k]}
+for(const k in C)if(C[k]){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.corrected[s]=out.corrected[s]||[]).push(id)}
+const ne=Object.values(out.edits).reduce((a,x)=>a+Object.keys(x).length,0),nc=Object.values(out.corrected).reduce((a,x)=>a+x.length,0);
+if(!ne&&!nc){$("msg").textContent="nothing edited or marked yet";return}
+const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:"application/json"}));a.download=`hipe-ocrepair-bench_${v}_ref-corrections.json`;a.click();
+$("msg").textContent=`saved ${ne} edited, ${nc} fully corrected units`};
+$("prev").onclick=()=>{ui=Math.max(0,ui-1);show()};$("next").onclick=()=>{ui=Math.min(units().length-1,ui+1);show()};
+renderCols();pick(INDEX.find(x=>x.split=="train")?.k||INDEX[0].k);
+</script></body></html>
