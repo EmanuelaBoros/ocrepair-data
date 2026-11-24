@@ -2,11 +2,11 @@
 """Resolve llm_review.json (text to find, replacement, reason) to unit ids in the version's data and write
 viewer_data/llm_review.js for the viewer. dta19-l0 entries also apply to l1 and l2 (same reference text).
 
-usage: build_llm_review.py [--data DIR] [--version v0.10]
+usage: build_llm_review.py [--data DIR] [--version v1.0]
 """
 import argparse, glob, json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
-ap = argparse.ArgumentParser(); ap.add_argument("--data", default=os.path.join(HERE, "..", "data")); ap.add_argument("--version", default="v0.10")
+ap = argparse.ArgumentParser(); ap.add_argument("--data", default=os.path.join(HERE, "..", "data")); ap.add_argument("--version", default="v1.0")
 a = ap.parse_args()
 NAME = re.compile(r"^hipe-ocrepair-bench_v[\d.]+_(.+?)_v[\d.]+_(train|dev|test)_([a-z]{2})\.jsonl$")
 units = {}

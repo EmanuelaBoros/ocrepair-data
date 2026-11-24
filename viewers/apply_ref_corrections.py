@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """Apply corrections saved from ocr_word_labels_viewer.html to the benchmark files.
 
-usage: apply_ref_corrections.py hipe-ocrepair-bench_v0.10_ref-corrections.json [--data DIR] [--from v0.10]
+usage: apply_ref_corrections.py hipe-ocrepair-bench_v1.1_ref-corrections.json [--data DIR] [--from v1.0]
 
 Reads data/<from>/<dataset>/<lang>/hipe-ocrepair-bench_<from>_*.jsonl and writes the
 same files to data/<version>/... with <from> replaced by <version> in the folder and
 file names. Only units that were edited or marked fully corrected are changed.
 """
-import argparse, difflib, json, os, sys
+import argparse, difflib, json, os, re, sys
 
 p = argparse.ArgumentParser()
 p.add_argument("corrections")
 p.add_argument("--data", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
-p.add_argument("--from", dest="old", default="v0.10")
+p.add_argument("--from", dest="old", default="v1.0")
 a = p.parse_args()
 
 C = json.load(open(a.corrections, encoding="utf-8"))
@@ -41,7 +41,7 @@ n_edit = n_ok = 0
 for src in sorted(set(C["edits"]) | set(C["corrected"])):
     edits, ok = C["edits"].get(src, {}), set(C["corrected"].get(src, []))
     inp = os.path.join(a.data, a.old, src)
-    rel = src.replace(a.old, new)
+    rel = re.sub(r"(hipe-ocrepair-bench_)" + re.escape(a.old) + "_", r"\g<1>" + new + "_", src, count=1)   # only the benchmark version, not a dataset version such as overproof-combined_v1.0
     out = os.path.join(a.data, new, rel)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     lines = []

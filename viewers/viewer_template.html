@@ -16,14 +16,16 @@ main{overflow:auto;padding:18px}
 .dim .u{opacity:.45}.leg span{display:inline-block;margin-right:14px;padding:0 6px;border-radius:3px}
 .stats{color:#555;font-size:13px;margin-top:6px}
 #sus{border-right:0;border-left:1px solid #ddd}.sit{padding:5px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:13px}.sit:hover{background:#f3f3f3}
-.sit b{font-family:ui-monospace,Menlo,monospace}.sit small{color:#777;display:block}.sit .rc{color:#b45309}.llm{border-top:2px solid #6366f1}.llm h3{color:#4338ca}.cf{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px}.cf.high{background:#fee2e2;color:#991b1b}.cf.medium{background:#fef3c7;color:#92400e}.cf.low{background:#e5e7eb;color:#374151}.lt{font-family:ui-monospace,Menlo,monospace}.sgs{margin-top:3px}button.sg{font:12px ui-monospace,Menlo,monospace;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1px 6px;margin:2px 4px 0 0;cursor:pointer}button.sg:hover{background:#dcfce7}
+.sit b{font-family:ui-monospace,Menlo,monospace}.sit small{color:#777;display:block}.sit .rc{color:#b45309}.prog{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pg{position:relative;overflow:hidden;border:1px solid #d4d4d8;border-radius:6px;padding:2px 8px;font-size:12px;cursor:pointer;background:#fff}
+.pg:hover{border-color:#6366f1}.pg i{position:absolute;left:0;bottom:0;height:3px;background:#16a34a}.pg em{font-style:normal;color:#16a34a;font-weight:600}.pg s{text-decoration:none;color:#d97706}.pg.all{background:#f0fdf4;border-color:#86efac}
+.llm{border-top:2px solid #6366f1}.llm h3{color:#4338ca}.cf{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px}.cf.high{background:#fee2e2;color:#991b1b}.cf.medium{background:#fef3c7;color:#92400e}.cf.low{background:#e5e7eb;color:#374151}.lt{font-family:ui-monospace,Menlo,monospace}.sgs{margin-top:3px}button.sg{font:12px ui-monospace,Menlo,monospace;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1px 6px;margin:2px 4px 0 0;cursor:pointer}button.sg:hover{background:#dcfce7}
 .w.sus{text-decoration:underline wavy #d97706;text-underline-offset:3px}.w.flash{outline:3px solid #f59e0b;background:#fde68a!important}
 #ref:focus{box-shadow:0 0 0 2px #93c5fd;border-radius:3px}#done.on{background:#16a34a;color:#fff}
 </style></head><body>
 <header><button id=prev>&larr;</button><button id=next>&rarr;</button> <label>version <input id=ver value="/*NEXT*/" size=6></label> <button id=save>Save corrections</button> <button id=revert>Revert this unit</button> <button id=done>Mark unit fully corrected</button> <span id=msg style="color:#555;font-size:13px"></span>
 <label><input type=checkbox id=dim checked> dim unchanged words</label>
 <div class=leg style="margin-top:6px"><span class=e>edited</span><span class=r>retokenised (segmentation only)</span><span class=i>inserted (OCR only)</span><span class=d>missing from OCR (reference only)</span><span>unchanged</span><span style="text-decoration:underline wavy #d97706;text-underline-offset:3px">possibly wrong in reference</span></div>
-<div class=stats id=stats></div></header>
+<div class=prog id=prog></div><div class=stats id=stats></div></header>
 <div id=wrap><div class=lst id=cols></div><div class=lst id=units></div>
 <main><div class=box><h3>OCR (coloured by class)</h3><div id=ocr></div></div><div class=box><h3>Reference (coloured by how OCR did) &mdash; click to edit</h3><div id=ref contenteditable=plaintext-only spellcheck=false style="outline:none"></div></div></main><div class=lst id=sus></div></div>
 <script src="viewer_data/llm_review.js"></script>
@@ -34,12 +36,20 @@ const $=i=>document.getElementById(i);
 const names={u:"unchanged",e:"edited",r:"retokenised",i:"inserted",d:"missing from OCR"};
 const rtitle={u:"correct, matches OCR",r:"correct, OCR split/merged it",e:"correct word the OCR got wrong",d:"correct word missing from the OCR"};
 const EK="ocrepair-ref-edits",CK="ocrepair-ref-done";
-let E=JSON.parse(localStorage.getItem(EK)||"{}"),C=JSON.parse(localStorage.getItem(CK)||"{}");
+const mig=o=>{const r={};for(const k in o)r[k.replace("hipe-ocrepair-bench_v0.10_","hipe-ocrepair-bench_v1.0_")]=o[k];return r};   // keep marks made before the folder was renamed to v1.0
+let E=mig(JSON.parse(localStorage.getItem(EK)||"{}")),C=mig(JSON.parse(localStorage.getItem(CK)||"{}"));
 const persist=()=>{localStorage.setItem(EK,JSON.stringify(E));localStorage.setItem(CK,JSON.stringify(C))};
 let cur=null,ui=0;
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const units=()=>D[cur]||[];
 const uk=u=>u.src+"#"+u.id;
+const SRCDS=s=>{const m=s.match(/_v[\d.]+_(.+?)_v[\d.]+_(?:train|dev|test)_([a-z]{2})\.jsonl$/);return m?m[1]+"-"+m[2]:null};
+function renderProg(){const tot={},ok={},ed={};for(const x of INDEX)tot[x.ds]=(tot[x.ds]||0)+x.n;
+for(const k in C)if(C[k]){const d=SRCDS(k.slice(0,k.indexOf("#")));if(d)ok[d]=(ok[d]||0)+1}
+for(const k in E){const d=SRCDS(k.slice(0,k.indexOf("#")));if(d)ed[d]=(ed[d]||0)+1}
+let a=0,b=0,c=0;for(const d in tot){a+=tot[d];b+=ok[d]||0;c+=ed[d]||0}
+const chip=(d,n,o,e,all)=>`<span class="pg${o==n&&n>0?" all":""}${all?" tot":""}" data-ds="${d}" title="${o} of ${n} units marked fully corrected, ${e} units edited">${all?"<b>all datasets</b>":"<b>"+d+"</b>"} <em>${o}</em>/${n}${e?` <s>${e} edited</s>`:""}<i style="width:${n?100*o/n:0}%"></i></span>`;
+$("prog").innerHTML=chip("",a,b,c,true)+Object.keys(tot).map(d=>chip(d,tot[d],ok[d]||0,ed[d]||0,false)).join("")}
 function renderCols(){let h="",last="";for(const x of INDEX){if(x.ds!==last){h+=`<div class=grp>${x.ds}</div>`;last=x.ds}
 h+=`<div class="it${x.k==cur?" sel":""}" data-k="${x.k}">${x.split}<small>${x.n} units</small></div>`}$("cols").innerHTML="<h3>Collection / split</h3>"+h}
 function renderUnits(){const us=units();$("units").innerHTML=`<h3>Units (${us.length})</h3>`+us.map((u,i)=>{const n=u.w.filter(x=>x[2]!="u").length;
@@ -52,7 +62,7 @@ else{$("msg").textContent="";const sm=new Set(u.sus.map(x=>x[0]));let g="",q=0;f
 g+=esc(u.ref.slice(q));$("ref").innerHTML=g;$("ref").className=$("dim").checked?"dim":""}
 const n={};u.w.forEach(x=>n[x[2]]=(n[x[2]]||0)+1);$("stats").textContent=u.w.length+" words: "+["u","e","r","i"].map(k=>names[k]+" "+(n[k]||0)).join(", ")+"  |  error rate "+((1-(n.u||0)/u.w.length)*100).toFixed(1)+"%";
 $("done").className=C[uk(u)]?"on":"";$("done").textContent=C[uk(u)]?"✔ Unit fully corrected (click to undo)":"Mark unit fully corrected";
-renderSus(u,ed!==undefined);renderUnits();const s=document.querySelector("#units .sel");if(s)s.scrollIntoView({block:"nearest"})}
+renderSus(u,ed!==undefined);renderUnits();renderProg();const s=document.querySelector("#units .sel");if(s)s.scrollIntoView({block:"nearest"})}
 const RC={chars:"odd characters / glued words",near:"one letter from a common word",rare:"seen once; OCR reads it differently"};
 function renderSus(u,edited){$("sus").innerHTML=`<h3>Possibly wrong in reference (${u.sus.length})</h3>`+
 u.sus.slice().sort((a,b)=>(b[3].length>0)-(a[3].length>0)||(b[2].split(",").length-a[2].split(",").length)||a[0]-b[0]).map(x=>`<div class=sit data-s="${x[0]}"><b>${esc(u.ref.slice(x[0],x[1]))}</b><small class=rc>${x[2].split(",").map(c=>RC[c]).join("; ")}</small>${x[3].length?`<div class=sgs>${x[3].map((v,i)=>`<button class=sg data-s="${x[0]}" data-i="${i}" title="click to use this in the reference">${esc(v)}</button>`).join("")}</div>`:""}</div>`).join("")+renderLLM(u)}
@@ -69,6 +79,7 @@ function load(k){return D[k]?Promise.resolve():new Promise((res,rej)=>{const x=I
 s.src="viewer_data/"+x.f+".js";s.onload=res;s.onerror=()=>rej(new Error("cannot load "+s.src));document.head.appendChild(s)})}
 async function pick(k){$("msg").textContent="loading "+k+" ...";try{await load(k)}catch(e){$("msg").textContent=e.message;return}
 cur=k;ui=0;renderCols();show()}
+$("prog").onclick=e=>{const p=e.target.closest(".pg");if(!p||!p.dataset.ds)return;const x=INDEX.find(i=>i.ds==p.dataset.ds&&i.split=="train")||INDEX.find(i=>i.ds==p.dataset.ds);if(x)pick(x.k)};
 $("cols").onclick=e=>{const d=e.target.closest(".it");if(d)pick(d.dataset.k)};
 $("units").onclick=e=>{const d=e.target.closest(".it");if(d){ui=+d.dataset.i;show()}};
 $("sus").onclick=e=>{const b=e.target.closest("button.sg");if(b&&b.dataset.llm!==undefined){applyLLM(units()[ui],+b.dataset.llm);return}

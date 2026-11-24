@@ -187,7 +187,8 @@ def build_one(job):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default=os.path.join(HERE, "..", "data"))
-    ap.add_argument("--version", default="v0.10")
+    ap.add_argument("--version", default="v1.0")
+    ap.add_argument("--next", default=None, help="version the viewer pre-fills for corrected files (default: minor version + 1)")
     a = ap.parse_args()
     root = os.path.join(a.data, a.version)
     os.makedirs(os.path.join(HERE, "viewer_data"), exist_ok=True)
@@ -212,7 +213,7 @@ def main():
         for r in pool.imap_unordered(build_one, [(f, root) for f in files]):
             index.append(r); print(r["k"], r["n"], "units,", r["sus"], "suspects", flush=True)
     index.sort(key=lambda x: (x["ds"], ORDER[x["split"]]))
-    nxt = re.sub(r"(\d+)$", lambda m: str(int(m.group(1)) + 1), a.version)
+    nxt = a.next or re.sub(r"(\d+)$", lambda m: str(int(m.group(1)) + 1), a.version)
     html = open(os.path.join(HERE, "viewer_template.html"), encoding="utf-8").read()
     html = html.replace("/*INDEX*/[]", json.dumps(index)).replace("/*BASE*/", json.dumps(a.version)).replace("/*NEXT*/", nxt)
     open(os.path.join(HERE, "ocr_word_labels_viewer.html"), "w", encoding="utf-8").write(html)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """dta19 references write capital I as J (Jch, Jn, Jtalien, ...). Change that J to I, in place, for one version folder.
 
-usage: fix_dta_J.py data/v0.10
+usage: fix_dta_J.py data/v1.0
 
 Rules, reference text only:
   * J at the start of a word, followed by a consonant (Jch, Jhr, Jnhalt, JV)        -> I
