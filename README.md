@@ -1,20 +1,24 @@
-# HIPE-OCRepair-2026 Data Repository
+# OCR Post-Correction Data: HIPE-OCRepair-2026 data and its revised versions
 
-[HIPE-OCRepair-2026](https://hipe-eval.github.io/HIPE-OCRepair-2026/) is an [ICDAR 2026 Competition](https://icdar2026.org/index.php/competitions/) focused on **LLM-assisted OCR post-correction of historical documents**, with a particular emphasis on historical newspapers.
+This repository takes the data of the [HIPE-OCRepair-2026](https://hipe-eval.github.io/HIPE-OCRepair-2026/) competition and records the modifications made to it in new versions. It is **not** a competition repository: there is no task, submission or leaderboard here. The competition data is kept unchanged in `data/v0.9/`; corrections, additions (such as the data of the ICDAR 2019 post-OCR competition) and the choice of what to keep go into the later versions `data/v0.95/` and `data/v1.0/`. See [Versions in this repository](#versions-in-this-repository).
+
+## About the original competition
+
+[HIPE-OCRepair-2026](https://hipe-eval.github.io/HIPE-OCRepair-2026/) was an [ICDAR 2026 Competition](https://icdar2026.org/index.php/competitions/) focused on **LLM-assisted OCR post-correction of historical documents**, with a particular emphasis on historical newspapers.
 
 With renewed interest driven by large language models (LLMs), OCR post-correction has (re)gained momentum, resulting in a growing number of models and experimental approaches. However, these efforts often rely on heterogeneous legacy datasets that come with important limitations, making systematic evaluation and meaningful comparison across approaches difficult.
 
-A central question motivating this competition is:
+A central question motivating the competition was:
 
 > **To what extent can modern large language models address the OCR debt accumulated in large-scale digitized historical collections?**
 
-The competition addresses this by providing **HIPE-OCRepair-Bench**, a unified multilingual benchmark for OCR post-correction, comprising curated datasets, an evaluation protocol, baseline systems, and an open leaderboard.
+The competition addressed this by providing **HIPE-OCRepair-Bench**, a unified multilingual benchmark for OCR post-correction, comprising curated datasets, an evaluation protocol, baseline systems, and an open leaderboard.
 
-## 📋 Participation Guidelines
+## 📋 Participation Guidelines (original competition)
 
 All information about the task, datasets, evaluation protocol, and submission instructions is available in the **[Participation Guidelines](https://github.com/hipe-eval/HIPE-OCRepair-2026-data/blob/main/README-Participation-Guidelines.md)**.
 
-## 🔗 Important Links
+## 🔗 Important Links (original competition)
 
 |                                              |                                                                                                        |
 |----------------------------------------------|--------------------------------------------------------------------------------------------------------|
