@@ -59,46 +59,17 @@ After the competition data, we added the data of the [ICDAR 2019 Competition on 
 
 These additional versions are not official competition releases and have no release tags.
 
-## 🎓 Citation
+## 🙏 Sources and credits
 
-### Competition Report
+The data in `data/v0.9/` is the data of the [HIPE-OCRepair-2026](https://hipe-eval.github.io/HIPE-OCRepair-2026/) competition (see its website for the organisers and the competition report), which in turn is built from the datasets below. The later versions are modifications of it and, for ICDAR 2019, an addition. Please credit the original sources when you use this data; the modifications in `v0.95` and `v1.0` are not made or endorsed by the original authors.
 
-The HIPE-OCRepair-2026 shared task will be described in a competition report paper currently under review for the proceedings of ICDAR 2026.
+| Dataset | Original source | License (as recorded in the data files) |
+|---------|-----------------|-----------------------------------------|
+| `dta19` | [Deutsches Textarchiv](https://www.deutschestextarchiv.de/), GT4Hist ground truth ([10.5281/zenodo.1344132](https://doi.org/10.5281/zenodo.1344132)) | CC BY-SA 4.0 |
+| `icdar2017` | [ICDAR 2017 Competition on Post-OCR Text Correction](https://sites.google.com/view/icdar2017-postcorrectionocr) | CC BY-NC-SA 4.0 |
+| `impresso-nzz` | [NZZ black-letter ground truth](https://github.com/impresso/NZZ-black-letter-ground-truth/releases/tag/v1.1) ([10.5281/zenodo.3333627](https://doi.org/10.5281/zenodo.3333627)) | CC BY 4.0 |
+| `impresso-snippets` | impresso project | CC BY-NC-SA 4.0 |
+| `overproof` | [Overproof evaluation data](https://overproof.projectcomputing.com/evaluation) | "Very likely public domain, but not explicitly stated in original source." |
+| `icdar2019` | [ICDAR 2019 Competition on Post-OCR Text Correction](https://zenodo.org/record/3515403), Rigaud, Doucet, Coustaty and Moreux | one license per sub-collection, see [`data/v1.0/icdar2019/README.md`](data/v1.0/icdar2019/README.md) |
 
-**Citation:** *(BibTeX entry will be provided upon publication)*
-
-### Participant Publications
-
-Participating teams may publish their own system description papers. We will maintain a list of these publications here:
-
-- **Team Name** - *Paper Title* - [Venue/Preprint] - [Link] *(coming soon)*
-
-
-## 🤝 Acknowledgments
-
-The HIPE-OCRepair-2026 organising team expresses its sincere appreciation to the ICDAR-2026 Competition Committee for the overall coordination and support.
-
-### 👥 Participating Teams
-
-We thank all teams who participated in the HIPE-OCRepair-2026 shared task:
-
-#### BnF-Mistral
-- **Mistral AI:** Maxime Kunsch, Jacques Sun, Yassine El Ouahidi
-- **Bibliothèque nationale de France (BnF):** Sébastien Crétin, Marcel Bautista, Jean-Philippe Moreux
-
-#### BLOCR
-- **British Library:** Valentina Vavassori, Harry Lloyds
-- **Code:** [github.com/harrylloyd-bl/hipe-ocrepair](https://github.com/harrylloyd-bl/hipe-ocrepair)
-
-#### L3i
-- **L3i Laboratory, La Rochelle Université:** Tien Nam Nguyen, Wenjun Sun, Ahmed Hamdi, Carlos-Emiliano Gonzalez-Gallardo, Mickaël Coustaty, Antoine Doucet
-
-#### zakaria-ENSIAS
-- **ENSIAS, Rabat, Morocco:** Zakaria Bouaouda
-
-
-### 📚 HIPE-eval Series
-
-HIPE-OCRepair-2026 is part of the [HIPE-eval](https://github.com/hipe-eval) series of shared tasks on historical document and information processing and evaluation.
-
-HIPE-eval editions are organised within the framework of the [Impresso – Media Monitoring of the Past](https://impresso-project.ch) project, funded by the Swiss National Science Foundation under grant No. CRSII5_213585 and by the Luxembourg National Research Fund under grant No. 17498891.
+The competition datasets are also described on Zenodo: [dta19](https://doi.org/10.5281/zenodo.18824344), [icdar2017](https://doi.org/10.5281/zenodo.18824428) and [overproof](https://doi.org/10.5281/zenodo.18824299).
