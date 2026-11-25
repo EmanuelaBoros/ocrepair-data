@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Apply corrections saved from ocr_word_labels_viewer.html to the benchmark files.
 
-usage: apply_ref_corrections.py hipe-ocrepair-bench_v1.1_ref-corrections.json [--data DIR] [--from v1.0]
+usage: apply_ref_corrections.py hipe-ocrepair-bench_v1.1_ref-corrections.json [--data DIR] [--from v1.0] [--drop-discarded]
 
 Reads data/<from>/<dataset>/<lang>/hipe-ocrepair-bench_<from>_*.jsonl and writes the
 same files to data/<version>/... with <from> replaced by <version> in the folder and
-file names. Only units that were edited or marked fully corrected are changed.
+file names. Only units that were edited or marked fully corrected are changed. Units discarded in the viewer (reference very different from
+the OCR) get document_metadata.discarded = true, and are left out of the new files with --drop-discarded; their edits are ignored.
 """
 import argparse, difflib, json, os, re, sys
 
@@ -13,6 +14,7 @@ p = argparse.ArgumentParser()
 p.add_argument("corrections")
 p.add_argument("--data", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data"))
 p.add_argument("--from", dest="old", default="v1.0")
+p.add_argument("--drop-discarded", action="store_true")
 a = p.parse_args()
 
 C = json.load(open(a.corrections, encoding="utf-8"))
@@ -38,8 +40,9 @@ def remap(offsets, old, newt):
 
 
 n_edit = n_ok = 0
-for src in sorted(set(C["edits"]) | set(C["corrected"])):
-    edits, ok = C["edits"].get(src, {}), set(C["corrected"].get(src, []))
+n_disc = 0
+for src in sorted(set(C["edits"]) | set(C["corrected"]) | set(C.get("discarded", {}))):
+    edits, ok, disc = C["edits"].get(src, {}), set(C["corrected"].get(src, [])), set(C.get("discarded", {}).get(src, []))
     inp = os.path.join(a.data, a.old, src)
     rel = re.sub(r"(hipe-ocrepair-bench_)" + re.escape(a.old) + "_", r"\g<1>" + new + "_", src, count=1)   # only the benchmark version, not a dataset version such as overproof-combined_v1.0
     out = os.path.join(a.data, new, rel)
@@ -49,6 +52,13 @@ for src in sorted(set(C["edits"]) | set(C["corrected"])):
         r = json.loads(line)
         did = r["document_metadata"]["document_id"]
         g = r["ground_truth"]
+        if did in disc:
+            n_disc += 1
+            if a.drop_discarded:
+                continue
+            r["document_metadata"]["discarded"] = True
+            lines.append(json.dumps(r, ensure_ascii=False))
+            continue
         if did in edits and edits[did] != g["transcription_unit"]:
             old_t, new_t = g["transcription_unit"], edits[did]
             if g.get("num_tokens") == len(old_t.split()):
@@ -65,4 +75,4 @@ for src in sorted(set(C["edits"]) | set(C["corrected"])):
         lines.append(json.dumps(r, ensure_ascii=False))
     open(out, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print(out)
-print(f"{n_edit} units edited, {n_ok} marked fully corrected")
+print(f"{n_edit} units edited, {n_ok} marked fully corrected, {n_disc} discarded" + (" (dropped)" if a.drop_discarded else " (flagged)"))

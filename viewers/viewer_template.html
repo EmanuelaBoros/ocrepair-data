@@ -13,7 +13,7 @@ h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;c
 main{overflow:auto;padding:18px}
 .box{background:#fff;border:1px solid #ddd;border-radius:6px;padding:14px 16px;margin-bottom:14px;white-space:pre-wrap;word-wrap:break-word}
 .w{border-radius:3px;padding:0 1px;cursor:default}.u{}.e{background:#f5b7b1}.r{background:#aed6f1}.i{background:#f9e79f;outline:1px solid #d4ac0d}.d{background:#fadbd8;outline:1px dashed #c0392b}
-.dim .u{opacity:.45}.leg span{display:inline-block;margin-right:14px;padding:0 6px;border-radius:3px}
+.it.dis{border-left:3px solid #c0392b;background:#fdecea}.it.dis small{color:#c0392b}#disc.on{background:#c0392b;color:#fff}.dim .u{opacity:.45}.leg span{display:inline-block;margin-right:14px;padding:0 6px;border-radius:3px}
 .stats{color:#555;font-size:13px;margin-top:6px}
 #sus{border-right:0;border-left:1px solid #ddd}.sit{padding:5px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:13px}.sit:hover{background:#f3f3f3}
 .sit b{font-family:ui-monospace,Menlo,monospace}.sit small{color:#777;display:block}.sit .rc{color:#b45309}.prog{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pg{position:relative;overflow:hidden;border:1px solid #d4d4d8;border-radius:6px;padding:2px 8px;font-size:12px;cursor:pointer;background:#fff}
@@ -28,7 +28,7 @@ dialog{width:min(1100px,94vw);border:1px solid #999;border-radius:10px;padding:1
 <div class=dcols><div><b>Current reference</b><textarea id=dold readonly spellcheck=false></textarea></div><div><b>Proposed correction (you can edit it)</b><textarea id=dnew spellcheck=false></textarea></div></div>
 <div id=dchg class=dchg></div>
 <div class=drow style="justify-content:flex-end"><button id=dno type=button>No, discard</button> <button id=dyes type=button disabled style="background:#16a34a;color:#fff">Yes, use this text</button></div></form></dialog>
-<div id=bn class=bn style="display:none" title="click to close"></div><header><button id=prev>&larr;</button><button id=next>&rarr;</button> <label>version <input id=ver value="/*NEXT*/" size=6></label> <button id=save>Save corrections</button> <button id=revert>Revert this unit</button> <button id=done>Mark unit fully corrected</button> <button id=ask title="ask an OpenAI model to correct the whole unit; you review the result before it is used">Correct whole unit (LLM)...</button> <span id=msg style="color:#555;font-size:13px"></span>
+<div id=bn class=bn style="display:none" title="click to close"></div><header><button id=prev>&larr;</button><button id=next>&rarr;</button> <label>version <input id=ver value="/*NEXT*/" size=6></label> <button id=save>Save corrections</button> <button id=revert>Revert this unit</button> <button id=done>Mark unit fully corrected</button> <button id=disc title="the reference is very different from the OCR (wrong text, other page): flag the unit to be discarded">Discard unit: reference very different from the OCR</button> <button id=ask title="ask an OpenAI model to correct the whole unit; you review the result before it is used">Correct whole unit (LLM)...</button> <span id=msg style="color:#555;font-size:13px"></span>
 <label><input type=checkbox id=dim checked> dim unchanged words</label>
 <div class=leg style="margin-top:6px"><span class=e>edited</span><span class=r>retokenised (segmentation only)</span><span class=i>inserted (OCR only)</span><span class=d>missing from OCR (reference only)</span><span>unchanged</span><span style="text-decoration:underline wavy #d97706;text-underline-offset:3px">possibly wrong in reference</span></div>
 <div class=prog id=prog></div><div class=stats id=stats></div></header>
@@ -43,8 +43,8 @@ const names={u:"unchanged",e:"edited",r:"retokenised",i:"inserted",d:"missing fr
 const rtitle={u:"correct, matches OCR",r:"correct, OCR split/merged it",e:"correct word the OCR got wrong",d:"correct word missing from the OCR"};
 const EK="ocrepair-ref-edits",CK="ocrepair-ref-done";
 const mig=o=>{const r={};for(const k in o)r[k.replace("hipe-ocrepair-bench_v0.10_","hipe-ocrepair-bench_v1.0_")]=o[k];return r};   // keep marks made before the folder was renamed to v1.0
-let E=mig(JSON.parse(localStorage.getItem(EK)||"{}")),C=mig(JSON.parse(localStorage.getItem(CK)||"{}"));
-const persist=()=>{localStorage.setItem(EK,JSON.stringify(E));localStorage.setItem(CK,JSON.stringify(C))};
+let E=mig(JSON.parse(localStorage.getItem(EK)||"{}")),C=mig(JSON.parse(localStorage.getItem(CK)||"{}"));const DK="ocrepair-ref-discard";let X=mig(JSON.parse(localStorage.getItem(DK)||"{}"));
+const persist=()=>{localStorage.setItem(EK,JSON.stringify(E));localStorage.setItem(CK,JSON.stringify(C));localStorage.setItem(DK,JSON.stringify(X))};
 let cur=null,ui=0;
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const units=()=>D[cur]||[];
@@ -59,7 +59,7 @@ $("prog").innerHTML=chip("",a,b,c,true)+Object.keys(tot).map(d=>chip(d,tot[d],ok
 function renderCols(){let h="",last="";for(const x of INDEX){if(x.ds!==last){h+=`<div class=grp>${x.ds}</div>`;last=x.ds}
 h+=`<div class="it${x.k==cur?" sel":""}" data-k="${x.k}">${x.split}<small>${x.n} units</small></div>`}$("cols").innerHTML="<h3>Collection / split</h3>"+h}
 function renderUnits(){const us=units();$("units").innerHTML=`<h3>Units (${us.length})</h3>`+us.map((u,i)=>{const n=u.w.filter(x=>x[2]!="u").length;
-return `<div class="it${i==ui?" sel":""}${E[uk(u)]!==undefined?" ed":""}${C[uk(u)]?" ok":""}" data-i="${i}">${i+1}. ${u.id}<small>${n} errors${C[uk(u)]?" ✔ corrected":""}</small></div>`}).join("")}
+return `<div class="it${i==ui?" sel":""}${E[uk(u)]!==undefined?" ed":""}${C[uk(u)]?" ok":""}${X[uk(u)]?" dis":""}" data-i="${i}">${i+1}. ${u.id}<small>${n} errors${C[uk(u)]?" ✔ corrected":""}${X[uk(u)]?" ✖ discarded":""}</small></div>`}).join("")}
 function show(){$("msg").style.color="#555";const u=units()[ui];if(!u)return;let h="",p=0;
 for(const [s,e,c] of u.w){h+=esc(u.ocr.slice(p,s))+`<span class="w ${c}" title="${names[c]}">${esc(u.ocr.slice(s,e))}</span>`;p=e}
 h+=esc(u.ocr.slice(p));$("ocr").innerHTML=h;$("ocr").className=$("dim").checked?"dim":"";
@@ -67,7 +67,7 @@ const ed=E[uk(u)];if(ed!==undefined){$("ref").textContent=ed;$("ref").className=
 else{$("msg").textContent="";const sm=new Set(u.sus.map(x=>x[0]));let g="",q=0;for(const [s,e,c] of u.rw){g+=esc(u.ref.slice(q,s))+`<span class="w ${c}${sm.has(s)?" sus":""}" data-s="${s}" title="${rtitle[c]}">${esc(u.ref.slice(s,e))}</span>`;q=e}
 g+=esc(u.ref.slice(q));$("ref").innerHTML=g;$("ref").className=$("dim").checked?"dim":""}
 const n={};u.w.forEach(x=>n[x[2]]=(n[x[2]]||0)+1);$("stats").textContent=u.w.length+" words: "+["u","e","r","i"].map(k=>names[k]+" "+(n[k]||0)).join(", ")+"  |  error rate "+((1-(n.u||0)/u.w.length)*100).toFixed(1)+"%";
-$("done").className=C[uk(u)]?"on":"";$("done").textContent=C[uk(u)]?"✔ Unit fully corrected (click to undo)":"Mark unit fully corrected";
+$("disc").className=X[uk(u)]?"on":"";$("disc").textContent=X[uk(u)]?"✖ Unit discarded (click to undo)":"Discard unit: reference very different from the OCR";$("done").className=C[uk(u)]?"on":"";$("done").textContent=C[uk(u)]?"✔ Unit fully corrected (click to undo)":"Mark unit fully corrected";
 renderSus(u,ed!==undefined);renderUnits();renderProg();const s=document.querySelector("#units .sel");if(s)s.scrollIntoView({block:"nearest"})}
 const RC={chars:"odd characters / glued words",near:"one letter from a common word",rare:"seen once; OCR reads it differently"};
 function renderSus(u,edited){$("sus").innerHTML=`<h3>Possibly wrong in reference (${u.sus.length})</h3>`+
@@ -169,13 +169,15 @@ $("dim").onchange=show;
 $("ref").oninput=()=>{const u=units()[ui],t=$("ref").textContent;if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();$("msg").textContent="edited (colours hidden)";renderUnits()};
 $("revert").onclick=()=>{delete E[uk(units()[ui])];persist();show()};
 $("done").onclick=()=>{const k=uk(units()[ui]);if(C[k])delete C[k];else C[k]=1;persist();show()};
-$("save").onclick=()=>{const v=$("ver").value.trim()||"/*NEXT*/",out={version:v,base:BASE,edits:{},corrected:{}};
+$("disc").onclick=()=>{const k=uk(units()[ui]);if(X[k])delete X[k];else X[k]=1;persist();show()};
+$("save").onclick=()=>{const v=$("ver").value.trim()||"/*NEXT*/",out={version:v,base:BASE,edits:{},corrected:{},discarded:{}};
 for(const k in E){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.edits[s]=out.edits[s]||{})[id]=E[k]}
 for(const k in C)if(C[k]){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.corrected[s]=out.corrected[s]||[]).push(id)}
-const ne=Object.values(out.edits).reduce((a,x)=>a+Object.keys(x).length,0),nc=Object.values(out.corrected).reduce((a,x)=>a+x.length,0);
-if(!ne&&!nc){$("msg").textContent="nothing edited or marked yet";return}
+for(const k in X)if(X[k]){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.discarded[s]=out.discarded[s]||[]).push(id)}
+const nd=Object.values(out.discarded).reduce((a,x)=>a+x.length,0),ne=Object.values(out.edits).reduce((a,x)=>a+Object.keys(x).length,0),nc=Object.values(out.corrected).reduce((a,x)=>a+x.length,0);
+if(!ne&&!nc&&!nd){$("msg").textContent="nothing edited or marked yet";return}
 const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:"application/json"}));a.download=`hipe-ocrepair-bench_${v}_ref-corrections.json`;a.click();
-$("msg").textContent=`saved ${ne} edited, ${nc} fully corrected units`};
+$("msg").textContent=`saved ${ne} edited, ${nc} fully corrected, ${nd} discarded units`};
 $("prev").onclick=()=>{ui=Math.max(0,ui-1);show()};$("next").onclick=()=>{ui=Math.min(units().length-1,ui+1);show()};
 renderCols();pick(INDEX.find(x=>x.split=="train")?.k||INDEX[0].k);
 </script></body></html>

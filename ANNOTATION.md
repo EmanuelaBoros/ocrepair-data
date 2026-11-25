@@ -49,13 +49,22 @@ Fix only clear, certain errors in the **reference** text: a typo, a swapped or m
 
 1. Select a unit and read the OCR and the reference. Click in the reference box to edit it in place; the colours disappear for an edited unit, and the unit is marked as edited in the list.
 2. When you have checked the whole unit, press **Mark unit fully corrected** (press it again to undo). Units you checked but did not need to change should be marked too, so that progress is counted.
-3. "Revert" undoes your edit of the unit.
-4. The optional LLM button proposes corrections with the OpenAI API, called from your browser with your own key (kept for the browser session only). You see each proposal and accept or discard it; the same rules apply.
+3. **Discard unit: reference very different from the OCR** (red button): use it when the reference is not the text of the OCR at all (wrong page, wrong passage, a different text), so that correcting it word by word makes no sense. Do not use it for a reference with a few errors. The unit is flagged in the list (red, "discarded"); press the button again to undo. Nothing is deleted at this point: the flag is saved in your corrections file, and the unit is then flagged or removed when the files are applied (see below). Do not edit a discarded unit.
+4. "Revert" undoes your edit of the unit.
+5. The optional LLM button proposes corrections with the OpenAI API, called from your browser with your own key (kept for the browser session only). You see each proposal and accept or discard it; the same rules apply.
 
 ## 5. Save and share your work
 
 1. Set the **version** field at the top to `v1.1-<your name>` (for example `v1.1-emanuela`, `v1.1-wenjun`).
-2. Press **Save corrections**. The browser downloads `hipe-ocrepair-bench_v1.1-<your name>_ref-corrections.json`, which holds your edited references and the list of units you marked fully corrected.
+2. Press **Save corrections**. The browser downloads `hipe-ocrepair-bench_v1.1-<your name>_ref-corrections.json`, which holds your edited references, the units you marked fully corrected and the units you discarded.
 3. Do this at the end of every session (it contains all of your work so far, not only the last session) and commit the file to the `corrections/` folder of this repository, by pull request or directly if you have write access. A newer file replaces your older one.
 
 Because the two annotators work on different collections, the files can be merged without conflicts: the merged result is the union of the `edits` and `corrected` entries of both files.
+
+## 6. For the maintainers: applying the files
+
+```bash
+python3 viewers/apply_ref_corrections.py corrections/<file>.json [--drop-discarded]
+```
+
+writes the corrected files to `data/<version>/`. Edited units get the new reference; units marked fully corrected get `manually_corrected: true`. Discarded units get `discarded: true` in `document_metadata` (their edits are ignored), or are left out of the new files with `--drop-discarded`.
