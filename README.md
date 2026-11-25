@@ -74,18 +74,15 @@ The data in `data/v0.9/` is the data of the [HIPE-OCRepair-2026](https://hipe-ev
 
 The competition datasets are also described on Zenodo: [dta19](https://doi.org/10.5281/zenodo.18824344), [icdar2017](https://doi.org/10.5281/zenodo.18824428) and [overproof](https://doi.org/10.5281/zenodo.18824299).
 
-## Annotating the reference transcriptions (viewer)
+## Annotating the reference transcriptions
 
-`viewers/ocr_word_labels_viewer.html` lets you check and correct the reference transcriptions of the splits in this repository. It is a static page; nothing is uploaded anywhere.
+We are correcting errors in the reference transcriptions of the splits in this repository, with the browser viewer `viewers/ocr_word_labels_viewer.html`. How to use it is in [ANNOTATION.md](ANNOTATION.md).
 
-```bash
-git clone https://github.com/EmanuelaBoros/ocrepair-data.git
-cd ocrepair-data/viewers
-python3 -m http.server 8000      # then open http://localhost:8000/ocr_word_labels_viewer.html
-```
+**Who annotates what.** Two annotators, split by language so that nobody works on the same units:
 
-- The OCR is coloured by word class (unchanged, edited, retokenised, inserted); the reference can be edited in place. Words that may be wrong in the reference are listed on the right, with suggestions.
-- Mark a unit "fully corrected" when you have checked it. Your edits and marks are kept in your browser (local storage).
-- "Save corrections" downloads one JSON file (`hipe-ocrepair-bench_<version>_ref-corrections.json`) with your edited references and the units you marked corrected. Send it to us or open a pull request with it, so that annotators' files can be merged.
-- Optional LLM-assisted proposals call the OpenAI API from your browser with your own key (kept for the browser session only).
-- `viewers/build_viewer.py` rebuilds the page and `viewers/viewer_data/` from `viewers/viewer_template.html` and the data in `data/`.
+| Annotator | Collections (viewer names) | Units |
+|---|---|---|
+| Emanuela | `icdar2017-fr`, `icdar2019-fr`, `impresso-snippets-fr` | 3,500 (all splits) |
+| Wenjun | `icdar2017-en`, `icdar2019-en`, `impresso-snippets-en`, `overproof-combined-en` | 1,308 (all splits) |
+
+`icdar2019-fr` is 2,849 units, most of the French share; if it needs to be shared, agree on unit ranges by hand (for example "units 1-1400 are Emanuela's") before starting. Each annotator saves a corrections file per session and commits it to `corrections/` (see ANNOTATION.md); because the collections are disjoint, the two annotators' files can be merged without conflicts.
