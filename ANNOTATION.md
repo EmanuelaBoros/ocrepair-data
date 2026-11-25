@@ -1,6 +1,21 @@
-# How to annotate
+# Annotating the reference transcriptions
 
-We check and correct the **reference** (ground-truth) transcription of each unit, using the OCR text next to it. Emanuela annotates the French collections and Wenjun the English ones (see the table in [README.md](README.md)). Do only your own collections.
+We are correcting errors in the reference transcriptions of the splits in this repository, with the browser viewer `viewers/ocr_word_labels_viewer.html`.
+
+## Who annotates what
+
+Two annotators, split by language so that nobody works on the same units:
+
+| Annotator | Collections (viewer names) | Units |
+|---|---|---|
+| Emanuela | `icdar2017-fr`, `icdar2019-fr`, `impresso-snippets-fr` | 3,500 (all splits) |
+| Wenjun | `icdar2017-en`, `icdar2019-en`, `impresso-snippets-en`, `overproof-combined-en` | 1,308 (all splits) |
+
+Do only your own collections. `icdar2019-fr` is 2,849 units, most of the French share; if it needs to be shared, agree on unit ranges by hand (for example "units 1-1400 are Emanuela's") before starting. Each annotator saves a corrections file per session and commits it to `corrections/` (section 5); because the collections are disjoint, the two annotators' files can be merged without conflicts.
+
+## How to annotate
+
+We check and correct the **reference** (ground-truth) transcription of each unit, using the OCR text next to it. Use the table above to see which collections are yours.
 
 ## 1. Start the viewer
 
