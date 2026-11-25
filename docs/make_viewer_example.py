@@ -43,7 +43,7 @@ def panel(y0, title, txt, spans, h, sus=None):
         if x + wpx > 930: t.remove(); x = 366; y += 28; t = text(x, y, w_, 10)
         fc, ec = COL[c]
         if c != "u": box(x - 2, y - 11, wpx + 4, 22, fc, ec or fc, 1, 3, "--" if c == "d" else "-")
-        if sus and s in sus: ax.plot([x - 2, x + wpx + 2], [y + 12, y + 12], color="#d97706", lw=1.6, ls=(0, (1, 1.2)))
+        if sus and s in sus: import numpy as np; xs_ = np.linspace(x - 2, x + wpx + 2, 60); ax.plot(xs_, y + 12 + 1.6 * np.sin((xs_ - x) * 1.1), color="#d97706", lw=1.3)
         t.set_zorder(5); x += wpx + 8
 panel(86, "OCR (COLOURED BY CLASS)", u["ocr"], u["w"], 150)
 panel(246, "REFERENCE (COLOURED BY HOW OCR DID) — CLICK TO EDIT", u["ref"], u["rw"], 150, {s for s, e, *_ in u["sus"]})
@@ -52,7 +52,7 @@ text(366, 416, f"{N} words: unchanged {n['u']}, edited {n['e']}, retokenised {n[
 # right panel
 box(950, 74, 250, 376, "#fff", "#ddd", 1, 0); text(960, 90, "POSSIBLY WRONG IN REFERENCE (1)", 7.5, "#666", "bold")
 text(960, 118, "ANNEE.N°", 9.5, "#111", "bold"); text(960, 136, "odd characters / glued words; seen once", 7.5, "#b45309")
-button(960, 148, "use: ANNEE. N°", "#eef2ff", "#111")
+button(960, 148, "ANNEE. N°", "#efefef", "#111")
 # explanation markers
 for (x1, y1, x2, y2, s) in ((650, 100, 700, 438, "1"),):
     pass

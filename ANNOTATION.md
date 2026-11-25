@@ -43,15 +43,15 @@ Open <http://localhost:8000/ocr_word_labels_viewer.html> in your browser. Use th
    | blue | retokenised | same letters, but the OCR split or merged the word differently (`advertise ments` / `advertisements`) |
    | yellow, solid outline | inserted | a word that only the OCR has (shown in the OCR panel) |
    | pink, dashed outline | missing from OCR | a word that only the reference has (shown in the reference panel) |
-   | orange dotted underline | suspicious | the word in the reference may itself be wrong; it is also listed on the right |
+   | orange wavy underline | suspicious | the word in the reference may itself be wrong; it is also listed on the right |
 
    "Dim unchanged words" (checkbox) fades the white words so that only the differences stand out. A red mark does not mean the reference is wrong: in most units the OCR is the wrong side. You are looking for the cases where the **reference** is wrong.
 3. **OCR panel:** the OCR text, coloured as above.
 4. **Reference panel:** the reference text, coloured by how the OCR did. Click in it to edit. Once you edit a unit the colours disappear and the unit is marked as edited in the list.
-5. **"Possibly wrong in reference" (right):** words of the reference that look suspicious, with the reason (odd characters or glued words; one letter from a common word; seen only once) and, when there is one, a suggested replacement (`use: ...`). Clicking an entry jumps to the word in the reference. For some units it also lists proposals from an earlier LLM review, with a reason and a confidence.
+5. **"Possibly wrong in reference" (right):** words of the reference that look suspicious, with the reason (odd characters or glued words; one letter from a common word; seen only once) and, when there is one, a suggested replacement, shown as a button with the suggested word. Clicking the entry jumps to the word in the reference; clicking the suggestion button replaces the word. For some units it also lists proposals from an earlier LLM review, with a reason and a confidence and an `apply` button.
 6. **Units list:** the units of the selected split with the number of errors. A unit you marked fully corrected has a green bar, an edited one an orange bar, a discarded one a red bar.
 
-Example: in the unit above the OCR has `ANNEE. - N° 4. 73.` where the reference has `ANNEE.N° 4.573.`. The blue words are the OCR splitting the reference differently, the red `73.` against `4.573.` is an OCR error, and `ANNEE.N°` is underlined in orange because it looks like two words glued together: the suggestion on the right is `ANNEE. N°`. You decide whether that is a mistake of the reference.
+Example: in the unit above the OCR has `ANNEE. - N° 4. 73.` where the reference has `ANNEE.N° 4.573.`. The blue words are the OCR splitting the reference differently, the red `73.` against `4.573.` is an OCR error, and `ANNEE.N°` is underlined in orange because it looks like two words glued together: the suggestion button on the right reads `ANNEE. N°`. You decide whether that is a mistake of the reference.
 
 ## 3. What to correct
 
@@ -72,7 +72,7 @@ For every unit in your collections:
 1. **Select the unit** in the units list and read the OCR panel and the reference panel. Turn on "dim unchanged words" to see the differences. Ask yourself, for each coloured word: is the **reference** right? Usually it is, and the OCR is the one that is wrong; then there is nothing to do.
 2. **Correct the reference where it is wrong**, in one of three ways (you can mix them in the same unit):
    - **By hand.** Click in the reference panel and fix the text (a typo, a swapped or missing letter, a missing space after punctuation, a line break in the middle of an ICDAR word). The unit shows as edited. "Revert this unit" undoes all your edits of the unit.
-   - **With the suggestions on the right.** Click an entry to jump to the word in the reference, check it against the OCR, and if the suggestion is right, click `use: ...` to apply it. If it is not right, ignore it; nothing changes until you click.
+   - **With the suggestions on the right.** Click an entry to jump to the word in the reference, check it against the OCR, and if the suggestion is right, click the suggestion button (or `apply` for an LLM-review proposal) to use it. If it is not right, ignore it; nothing changes until you click.
    - **With an LLM.** Press **Correct whole unit (LLM)...** and fill in the model id, the effort and your OpenAI API key (kept for this tab only). **Propose correction** shows the current reference next to the proposed one, with the changes listed; you can edit the proposal, then press **Yes, use this text** or **No, discard**. **Judge: is the text correct?** only asks the model for a verdict and changes nothing. The LLM can be wrong: always compare its changes with the OCR, and apply the same rules as in section 3.
 3. **When you have checked the whole unit, press Mark unit fully corrected** (press again to undo), also when you changed nothing, so that progress is counted. Go on with the next unit (the arrow button).
 4. **If the reference is not the text of the OCR at all** (wrong page or passage), press **Discard unit: reference very different from the OCR** (red) instead of correcting. Do not use it for a reference with a few errors. The unit gets a red bar and "discarded"; press again to undo. Nothing is deleted: the flag is saved in your corrections file, and the unit is then flagged or removed when the files are applied (section 6). Do not edit a discarded unit.
