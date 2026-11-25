@@ -73,3 +73,19 @@ The data in `data/v0.9/` is the data of the [HIPE-OCRepair-2026](https://hipe-ev
 | `icdar2019` | [ICDAR 2019 Competition on Post-OCR Text Correction](https://zenodo.org/record/3515403), Rigaud, Doucet, Coustaty and Moreux | one license per sub-collection, see [`data/v1.0/icdar2019/README.md`](data/v1.0/icdar2019/README.md) |
 
 The competition datasets are also described on Zenodo: [dta19](https://doi.org/10.5281/zenodo.18824344), [icdar2017](https://doi.org/10.5281/zenodo.18824428) and [overproof](https://doi.org/10.5281/zenodo.18824299).
+
+## Annotating the reference transcriptions (viewer)
+
+`viewers/ocr_word_labels_viewer.html` lets you check and correct the reference transcriptions of the splits in this repository. It is a static page; nothing is uploaded anywhere.
+
+```bash
+git clone https://github.com/EmanuelaBoros/ocrepair-data.git
+cd ocrepair-data/viewers
+python3 -m http.server 8000      # then open http://localhost:8000/ocr_word_labels_viewer.html
+```
+
+- The OCR is coloured by word class (unchanged, edited, retokenised, inserted); the reference can be edited in place. Words that may be wrong in the reference are listed on the right, with suggestions.
+- Mark a unit "fully corrected" when you have checked it. Your edits and marks are kept in your browser (local storage).
+- "Save corrections" downloads one JSON file (`hipe-ocrepair-bench_<version>_ref-corrections.json`) with your edited references and the units you marked corrected. Send it to us or open a pull request with it, so that annotators' files can be merged.
+- Optional LLM-assisted proposals call the OpenAI API from your browser with your own key (kept for the browser session only).
+- `viewers/build_viewer.py` rebuilds the page and `viewers/viewer_data/` from `viewers/viewer_template.html` and the data in `data/`.

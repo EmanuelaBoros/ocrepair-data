@@ -18,11 +18,17 @@ main{overflow:auto;padding:18px}
 #sus{border-right:0;border-left:1px solid #ddd}.sit{padding:5px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:13px}.sit:hover{background:#f3f3f3}
 .sit b{font-family:ui-monospace,Menlo,monospace}.sit small{color:#777;display:block}.sit .rc{color:#b45309}.prog{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pg{position:relative;overflow:hidden;border:1px solid #d4d4d8;border-radius:6px;padding:2px 8px;font-size:12px;cursor:pointer;background:#fff}
 .pg:hover{border-color:#6366f1}.pg i{position:absolute;left:0;bottom:0;height:3px;background:#16a34a}.pg em{font-style:normal;color:#16a34a;font-weight:600}.pg s{text-decoration:none;color:#d97706}.pg.all{background:#f0fdf4;border-color:#86efac}
-.llm{border-top:2px solid #6366f1}.llm h3{color:#4338ca}.cf{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px}.cf.high{background:#fee2e2;color:#991b1b}.cf.medium{background:#fef3c7;color:#92400e}.cf.low{background:#e5e7eb;color:#374151}.lt{font-family:ui-monospace,Menlo,monospace}.sgs{margin-top:3px}button.sg{font:12px ui-monospace,Menlo,monospace;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1px 6px;margin:2px 4px 0 0;cursor:pointer}button.sg:hover{background:#dcfce7}
+dialog{width:min(1100px,94vw);border:1px solid #999;border-radius:10px;padding:16px;box-shadow:0 8px 40px rgba(0,0,0,.35)}dialog::backdrop{background:rgba(0,0,0,.35)}.drow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.djv{border:2px solid #9ca3af;border-radius:6px;padding:8px 10px;margin:6px 0;font-size:14px}.djv.good{border-color:#16a34a;background:#f0fdf4}.djv.bad{border-color:#dc2626;background:#fef2f2}.djv.unsure{border-color:#d97706;background:#fffbeb}.djv li{margin:2px 0}.dst{background:#f3f4f6;border-radius:6px;padding:8px 10px;font-size:14px;margin:8px 0}.dst.err{background:#fee2e2;color:#991b1b}.dst.ok{background:#dcfce7;color:#166534}.dcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}.dcols textarea{width:100%;height:42vh;font:14px/1.5 Georgia,serif;box-sizing:border-box;padding:8px}.dchg{font-size:13px;max-height:16vh;overflow:auto;margin:6px 0}.dchg span.lt{background:#fef3c7;padding:0 3px;border-radius:3px}.dchg div{padding:1px 0}.bn{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:99;max-width:70vw;padding:12px 18px;border-radius:8px;font-size:15px;box-shadow:0 4px 16px rgba(0,0,0,.25);background:#1f2937;color:#fff;cursor:pointer}.bn.err{background:#b91c1c}.bn.ok{background:#15803d}.bn small{display:block;opacity:.8;margin-top:4px}.rej{color:#6b7280;font-size:12px;padding:4px 12px}.rej summary{cursor:pointer}.llm{border-top:2px solid #6366f1}.llm h3{color:#4338ca}.cf{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px}.cf.high{background:#fee2e2;color:#991b1b}.cf.medium{background:#fef3c7;color:#92400e}.cf.low{background:#e5e7eb;color:#374151}.lt{font-family:ui-monospace,Menlo,monospace}.sgs{margin-top:3px}button.sg{font:12px ui-monospace,Menlo,monospace;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1px 6px;margin:2px 4px 0 0;cursor:pointer}button.sg:hover{background:#dcfce7}
 .w.sus{text-decoration:underline wavy #d97706;text-underline-offset:3px}.w.flash{outline:3px solid #f59e0b;background:#fde68a!important}
 #ref:focus{box-shadow:0 0 0 2px #93c5fd;border-radius:3px}#done.on{background:#16a34a;color:#fff}
 </style></head><body>
-<header><button id=prev>&larr;</button><button id=next>&rarr;</button> <label>version <input id=ver value="/*NEXT*/" size=6></label> <button id=save>Save corrections</button> <button id=revert>Revert this unit</button> <button id=done>Mark unit fully corrected</button> <span id=msg style="color:#555;font-size:13px"></span>
+<dialog id=dlg><form method=dialog onsubmit="return false"><h3 style="margin:0 0 8px">Correct this unit with an LLM</h3>
+<div class=drow><label>model <input id=lmodel size=26 placeholder="model id from your OpenAI account"></label> <label>effort <select id=leffort><option>low<option>medium<option selected>high</select></label> <label>API key <input id=lkey type=password size=26 placeholder="kept for this tab only" autocomplete=off></label> <button id=dgo type=button>Propose correction</button> <button id=djg type=button title="ask the model for a verdict only: is the text correct or not? It does not change anything">Judge: is the text correct?</button></div><div id=djv class=djv style="display:none"></div>
+<div id=dst class=dst>Fill in the three fields and press &ldquo;Propose correction&rdquo;. The model only fixes clear errors; it must not add words, modernise spellings or add quotation marks.</div>
+<div class=dcols><div><b>Current reference</b><textarea id=dold readonly spellcheck=false></textarea></div><div><b>Proposed correction (you can edit it)</b><textarea id=dnew spellcheck=false></textarea></div></div>
+<div id=dchg class=dchg></div>
+<div class=drow style="justify-content:flex-end"><button id=dno type=button>No, discard</button> <button id=dyes type=button disabled style="background:#16a34a;color:#fff">Yes, use this text</button></div></form></dialog>
+<div id=bn class=bn style="display:none" title="click to close"></div><header><button id=prev>&larr;</button><button id=next>&rarr;</button> <label>version <input id=ver value="/*NEXT*/" size=6></label> <button id=save>Save corrections</button> <button id=revert>Revert this unit</button> <button id=done>Mark unit fully corrected</button> <button id=ask title="ask an OpenAI model to correct the whole unit; you review the result before it is used">Correct whole unit (LLM)...</button> <span id=msg style="color:#555;font-size:13px"></span>
 <label><input type=checkbox id=dim checked> dim unchanged words</label>
 <div class=leg style="margin-top:6px"><span class=e>edited</span><span class=r>retokenised (segmentation only)</span><span class=i>inserted (OCR only)</span><span class=d>missing from OCR (reference only)</span><span>unchanged</span><span style="text-decoration:underline wavy #d97706;text-underline-offset:3px">possibly wrong in reference</span></div>
 <div class=prog id=prog></div><div class=stats id=stats></div></header>
@@ -54,7 +60,7 @@ function renderCols(){let h="",last="";for(const x of INDEX){if(x.ds!==last){h+=
 h+=`<div class="it${x.k==cur?" sel":""}" data-k="${x.k}">${x.split}<small>${x.n} units</small></div>`}$("cols").innerHTML="<h3>Collection / split</h3>"+h}
 function renderUnits(){const us=units();$("units").innerHTML=`<h3>Units (${us.length})</h3>`+us.map((u,i)=>{const n=u.w.filter(x=>x[2]!="u").length;
 return `<div class="it${i==ui?" sel":""}${E[uk(u)]!==undefined?" ed":""}${C[uk(u)]?" ok":""}" data-i="${i}">${i+1}. ${u.id}<small>${n} errors${C[uk(u)]?" ✔ corrected":""}</small></div>`}).join("")}
-function show(){const u=units()[ui];if(!u)return;let h="",p=0;
+function show(){$("msg").style.color="#555";const u=units()[ui];if(!u)return;let h="",p=0;
 for(const [s,e,c] of u.w){h+=esc(u.ocr.slice(p,s))+`<span class="w ${c}" title="${names[c]}">${esc(u.ocr.slice(s,e))}</span>`;p=e}
 h+=esc(u.ocr.slice(p));$("ocr").innerHTML=h;$("ocr").className=$("dim").checked?"dim":"";
 const ed=E[uk(u)];if(ed!==undefined){$("ref").textContent=ed;$("ref").className="";$("msg").textContent="edited (colours hidden)"}
@@ -66,7 +72,77 @@ renderSus(u,ed!==undefined);renderUnits();renderProg();const s=document.querySel
 const RC={chars:"odd characters / glued words",near:"one letter from a common word",rare:"seen once; OCR reads it differently"};
 function renderSus(u,edited){$("sus").innerHTML=`<h3>Possibly wrong in reference (${u.sus.length})</h3>`+
 u.sus.slice().sort((a,b)=>(b[3].length>0)-(a[3].length>0)||(b[2].split(",").length-a[2].split(",").length)||a[0]-b[0]).map(x=>`<div class=sit data-s="${x[0]}"><b>${esc(u.ref.slice(x[0],x[1]))}</b><small class=rc>${x[2].split(",").map(c=>RC[c]).join("; ")}</small>${x[3].length?`<div class=sgs>${x[3].map((v,i)=>`<button class=sg data-s="${x[0]}" data-i="${i}" title="click to use this in the reference">${esc(v)}</button>`).join("")}</div>`:""}</div>`).join("")+renderLLM(u)}
-function renderLLM(u){const L=llmFor(u);if(!L.length)return "";return `<div class=llm><h3 style="padding:8px 12px 4px">Reviewed by an LLM (${L.length})</h3>`+L.map((e,i)=>`<div class=sit data-llm="${i}"><span class=lt>${esc(e.find)}</span> &rarr; <span class=lt style="color:#15803d">${esc(e.rep)}</span><span class="cf ${e.conf}">${e.conf}</span><small>${esc(e.why)}</small><div class=sgs><button class=sg data-llm="${i}" title="replace in the reference">apply</button></div></div>`).join("")+"</div>"}
+const LLM_RULES=`You check the reference (ground-truth) transcription of a historical document that is used to evaluate OCR post-correction. Propose only corrections of clear, certain errors in the REFERENCE text, such as a typo, a swapped or missing letter, or a missing space after punctuation.
+Strict rules:
+- Be conservative. If you are not sure, propose nothing. An empty list is a good answer.
+- Do not add words. Do not delete words.
+- Do not modernise or normalise anything. Keep historical spellings, archaic and dialect forms, long s, ligatures, diacritics and combining accents, capitalisation, abbreviations and the punctuation habits of the period, even where they look wrong today.
+- Do not add quotation marks or any other quotes, and do not change existing ones.
+- Do not change numbers, names or dates unless the OCR text clearly shows that the reference has a typo.
+- Do not touch line breaks or hyphenation.
+Reply with JSON only: {"edits":[{"find":"...","replace":"...","reason":"...","confidence":"high|medium|low"}]}. "find" must be copied exactly from the reference, must occur exactly once in it, and should be as short as possible (a word, or a few characters with the neighbouring letters if needed).`;
+const llmInput=(ref,ocr)=>"REFERENCE TEXT:\n"+ref+"\n\nOCR TEXT (noisy; for comparison only, do not copy its errors):\n"+ocr+"\n\nReply with JSON only, in the format {\"edits\":[{\"find\":\"...\",\"replace\":\"...\",\"reason\":\"...\",\"confidence\":\"high|medium|low\"}]}. Use {\"edits\":[]} if nothing needs correcting.";
+const QUOTES=/["\u201c\u201d\u201e\u00ab\u00bb]/g,sq=s=>s.replace(/\s+/g,""),nw=s=>s.trim().split(/\s+/).filter(Boolean).length;
+function llmValidate(edits,text){const ok=[],bad=[];for(const e of edits){const f=String(e.find||""),r=String(e.replace==null?"":e.replace);let why="";
+if(!f||f===r)why="no change";else{const n=text.split(f).length-1;
+if(n==0)why="text not found in the reference";else if(n>1)why="text occurs "+n+" times (ambiguous)";
+else if(sq(r)!==sq(f)&&nw(r)>nw(f))why="adds a word";
+else if((r.match(QUOTES)||[]).length>(f.match(QUOTES)||[]).length)why="adds a quotation mark"}
+(why?bad:ok).push({find:f,rep:r,why:String(e.reason||""),conf:["high","medium","low"].includes(e.confidence)?e.confidence:"low",reject:why})}return {ok,bad}}
+const llmText=d=>d.output_text||(d.output||[]).flatMap(o=>o.content||[]).filter(c=>c.type=="output_text").map(c=>c.text).join("");
+let bnT=0;function banner(text,kind,sub){const b=$("bn");b.className="bn "+(kind||"");b.innerHTML=esc(text)+(sub?"<small>"+esc(sub)+"</small>":"");b.style.display="block";clearTimeout(bnT);if(kind!="err")bnT=setTimeout(()=>{b.style.display="none"},12000)}
+const LIVEK="ocrepair-live-llm";let REJ={};
+const saveLive=()=>{const o={};for(const e of LLM)if(e.live)(o[e.k+"\u0001"+e.id]=o[e.k+"\u0001"+e.id]||[]).push(e);localStorage.setItem(LIVEK,JSON.stringify(o))};
+try{const o=JSON.parse(localStorage.getItem(LIVEK)||"{}");for(const k in o)LLM.push(...o[k])}catch(_){}
+const dst=(h,k)=>{$("dst").className="dst "+(k||"");$("dst").innerHTML=h};
+function openDlg(){const u=units()[ui];if(!u)return;const text=E[uk(u)]!==undefined?E[uk(u)]:u.ref;$("dold").value=text;$("dnew").value="";$("dchg").innerHTML="";$("djv").style.display="none";$("dyes").disabled=true;
+dst("Fill in the three fields and press &ldquo;Propose correction&rdquo;. The model only fixes clear errors; it must not add words, modernise spellings or add quotation marks.");$("dlg").showModal()}
+async function askLLM(){const u=units()[ui];if(!u)return;const model=$("lmodel").value.trim(),key=$("lkey").value.trim();
+if(!model||!key){dst("Enter the model id and your API key first.","err");return}
+localStorage.setItem("ocrepair-llm-model",model);localStorage.setItem("ocrepair-llm-effort",$("leffort").value);sessionStorage.setItem("ocrepair-llm-key",key);
+const text=$("dold").value,btn=$("dgo"),t0=Date.now(),eff=$("leffort").value;btn.disabled=true;$("dyes").disabled=true;$("dchg").innerHTML="";
+const tick=setInterval(()=>dst("Asking "+esc(model)+" ("+eff+")... "+Math.round((Date.now()-t0)/1000)+" s. At high effort this can take a minute or more."),500);
+try{const r=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
+body:JSON.stringify({model,reasoning:{effort:eff},instructions:LLM_RULES,input:llmInput(text,u.ocr),text:{format:{type:"json_object"}}})});
+const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
+const raw=llmText(d);console.log("LLM answer",d);let edits;try{edits=JSON.parse(raw).edits||[]}catch(_){throw new Error("the answer was not valid JSON: "+raw.slice(0,150))}
+const {ok,bad}=llmValidate(edits,text);
+const pos=ok.map(e=>({...e,at:text.indexOf(e.find)})).sort((a,b)=>b.at-a.at);let out=text,last=1e12,used=[],skip=[];
+for(const e of pos){if(e.at+e.find.length>last){skip.push({...e,reject:"overlaps another edit"});continue}out=out.slice(0,e.at)+e.rep+out.slice(e.at+e.find.length);last=e.at;used.push(e)}
+used.reverse();$("dnew").value=out;
+const rows=used.map(e=>`<div>&#10003; <span class=lt>${esc(e.find)}</span> &rarr; <span class=lt>${esc(e.rep)}</span> <small>${esc(e.conf)}${e.why?": "+esc(e.why):""}</small></div>`).concat(bad.concat(skip).map(e=>`<div style="color:#6b7280">&#10007; <span class=lt>${esc(e.find)}</span> &rarr; <span class=lt>${esc(e.rep)}</span> <small>rejected: ${esc(e.reject)}</small></div>`));
+$("dchg").innerHTML=rows.join("");$("dyes").disabled=false;
+dst(!edits.length?esc(model)+" found nothing to correct (it was told to be conservative). The proposed text is the same as the current one.":used.length+" change(s) proposed"+(bad.length+skip.length?", "+(bad.length+skip.length)+" rejected by the safety checks":"")+". Edit the right-hand text if you like, then answer Yes or No.",used.length?"ok":"")
+}catch(err){console.error(err);let m="LLM request failed: "+(err&&err.message?err.message:err);if(/Failed to fetch|NetworkError|Load failed/i.test(m))m+=" (the browser could not reach api.openai.com: check your connection, a blocker extension, and the browser console)";dst(esc(m),"err")}
+finally{clearInterval(tick);btn.disabled=false}}
+const JUDGE_RULES=`You are a strict but fair judge of the transcription quality of a historical document. You are given a TEXT (a ground-truth transcription that is used to evaluate OCR post-correction) and the noisy OCR output of the same passage for comparison. Decide whether the TEXT is correct.
+Rules:
+- Historical spellings, archaic and dialect forms, long s, ligatures, combining accents, old capitalisation, abbreviations and period punctuation are NOT errors. Do not judge against modern orthography.
+- An error is a clear typo, a swapped, missing or extra letter, a wrongly split or glued word, a wrong character, or something that clearly contradicts the OCR text in a way the OCR text makes certain.
+- Do not judge the OCR text; judge only the TEXT.
+- If you are not sure about something, do not list it as an error.
+Verdict: "correct" (no clear errors), "has_errors" (at least one clear error) or "unsure" (you cannot tell).`;
+const judgeInput=(txt,ocr)=>"TEXT TO JUDGE:\n"+txt+"\n\nOCR TEXT (noisy; for comparison only):\n"+ocr+"\n\nReply with JSON only, in the format {\"verdict\":\"correct|has_errors|unsure\",\"confidence\":\"high|medium|low\",\"summary\":\"one sentence\",\"errors\":[{\"text\":\"the exact words from TEXT\",\"problem\":\"what is wrong\",\"suggestion\":\"how it should read\"}]}. Use an empty errors list when the verdict is correct.";
+async function judgeLLM(){const u=units()[ui];if(!u)return;const model=$("lmodel").value.trim(),key=$("lkey").value.trim();
+if(!model||!key){dst("Enter the model id and your API key first.","err");return}
+localStorage.setItem("ocrepair-llm-model",model);localStorage.setItem("ocrepair-llm-effort",$("leffort").value);sessionStorage.setItem("ocrepair-llm-key",key);
+const nw=$("dnew").value,text=nw.trim()?nw:$("dold").value,which=nw.trim()?"the proposed text (right-hand box)":"the current reference",btn=$("djg"),t0=Date.now(),eff=$("leffort").value;btn.disabled=true;$("djv").style.display="none";
+const tick=setInterval(()=>dst("Judging "+which+" with "+esc(model)+" ("+eff+")... "+Math.round((Date.now()-t0)/1000)+" s"),500);
+try{const r=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
+body:JSON.stringify({model,reasoning:{effort:eff},instructions:JUDGE_RULES,input:judgeInput(text,u.ocr),text:{format:{type:"json_object"}}})});
+const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
+const raw=llmText(d);console.log("LLM judge answer",d);let j;try{j=JSON.parse(raw)}catch(_){throw new Error("the answer was not valid JSON: "+raw.slice(0,150))}
+const v=["correct","has_errors","unsure"].includes(j.verdict)?j.verdict:"unsure",cls=v=="correct"?"good":v=="has_errors"?"bad":"unsure",lab=v=="correct"?"CORRECT":v=="has_errors"?"HAS ERRORS":"UNSURE";
+const errs=(Array.isArray(j.errors)?j.errors:[]).map(e=>({t:String(e.text||""),p:String(e.problem||""),s:String(e.suggestion||"")})),found=errs.filter(e=>e.t&&text.includes(e.t)).length;
+$("djv").className="djv "+cls;$("djv").style.display="block";
+$("djv").innerHTML=`<b>${lab}</b> <small>(confidence: ${esc(j.confidence||"?")}; judged ${esc(which)})</small><div>${esc(j.summary||"")}</div>`+(errs.length?"<ul>"+errs.map(e=>`<li><span class=lt>${esc(e.t)}</span>${e.s?" &rarr; <span class=lt>"+esc(e.s)+"</span>":""}: ${esc(e.p)}${e.t&&!text.includes(e.t)?" <small style='color:#b91c1c'>(not found in the text)</small>":""}</li>`).join("")+"</ul>":"");
+dst("Judge verdict: "+lab+(v=="correct"?". Nothing was changed: the text stays as it is (close this window with No).":v=="has_errors"?". The text was not changed; use Propose correction, or edit the right-hand box yourself.":"."),cls=="good"?"ok":cls=="bad"?"err":"")
+}catch(err){console.error(err);let m="LLM request failed: "+(err&&err.message?err.message:err);if(/Failed to fetch|NetworkError|Load failed/i.test(m))m+=" (the browser could not reach api.openai.com: check your connection, a blocker extension, and the browser console)";dst(esc(m),"err")}
+finally{clearInterval(tick);btn.disabled=false}}
+function acceptDlg(){const u=units()[ui],old=$("dold").value,nw=$("dnew").value;
+if(nw!==old&&(nw.trim().split(/\s+/).length>old.trim().split(/\s+/).length||(nw.match(QUOTES)||[]).length>(old.match(QUOTES)||[]).length)&&!confirm("The new text has more words or more quotation marks than the current one. Use it anyway?"))return;
+if(nw===u.ref)delete E[uk(u)];else E[uk(u)]=nw;persist();$("dlg").close();show();$("msg").textContent=nw===old?"no change":"reference replaced by the reviewed LLM text (you can revert this unit)"}
+function renderLLM(u){const L=llmFor(u),R=REJ[uk(u)]||[];if(!L.length&&!R.length)return "";const rej=R.length?`<details class=rej><summary>${R.length} rejected by the safety checks</summary>${R.map(e=>`<div><span class=lt>${esc(e.find)}</span> &rarr; <span class=lt>${esc(e.rep)}</span>: ${esc(e.reject)}</div>`).join("")}</details>`:"";return `<div class=llm><h3 style="padding:8px 12px 4px">Reviewed by an LLM (${L.length})</h3>`+L.map((e,i)=>`<div class=sit data-llm="${i}"><span class=lt>${esc(e.find)}</span> &rarr; <span class=lt style="color:#15803d">${esc(e.rep)}</span><span class="cf ${e.conf}">${e.conf}</span><small>${esc(e.why)}${e.src?` <i>(${esc(e.src)})</i>`:""}</small><div class=sgs><button class=sg data-llm="${i}" title="replace in the reference">apply</button></div></div>`).join("")+rej+"</div>"}
 function applyLLM(u,i){const e=llmFor(u)[i];if(!e)return;const cur=E[uk(u)]!==undefined?E[uk(u)]:u.ref,q=cur.indexOf(e.find);
 if(q<0){$("msg").textContent="could not find \""+e.find+"\" in the (edited) text";return}
 const t=cur.slice(0,q)+e.rep+cur.slice(q+e.find.length);if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();show();$("msg").textContent="applied: \""+e.find+"\" \u2192 \""+e.rep+"\""}
@@ -87,6 +163,8 @@ const L=e.target.closest(".sit[data-llm]");if(L&&!b){const u=units()[ui],en=llmF
 if(b){applySugg(units()[ui],+b.dataset.s,+b.dataset.i);return}
 const d=e.target.closest(".sit");if(!d||d.dataset.s===undefined)return;const el=document.querySelector(`#ref .w[data-s="${d.dataset.s}"]`);
 if(!el)return;document.querySelectorAll("#ref .flash").forEach(x=>x.classList.remove("flash"));el.classList.add("flash");el.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>el.classList.remove("flash"),2500)};
+$("ask").onclick=openDlg;$("dgo").onclick=askLLM;$("djg").onclick=judgeLLM;$("dno").onclick=()=>$("dlg").close();$("dyes").onclick=acceptDlg;
+$("lmodel").value=localStorage.getItem("ocrepair-llm-model")||"";$("leffort").value=localStorage.getItem("ocrepair-llm-effort")||"high";$("lkey").value=sessionStorage.getItem("ocrepair-llm-key")||"";
 $("dim").onchange=show;
 $("ref").oninput=()=>{const u=units()[ui],t=$("ref").textContent;if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();$("msg").textContent="edited (colours hidden)";renderUnits()};
 $("revert").onclick=()=>{delete E[uk(units()[ui])];persist();show()};
