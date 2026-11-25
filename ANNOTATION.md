@@ -41,7 +41,9 @@ Fix only clear, certain errors in the **reference** text: a typo, a swapped or m
 - Do not modernise or normalise: keep historical spellings, archaic and dialect forms, long s, ligatures, diacritics, capitalisation, abbreviations and the punctuation habits of the period, even where they look wrong today.
 - Do not add or change quotation marks.
 - Do not change numbers, names or dates unless the OCR text clearly shows that the reference has a typo.
-- Do not touch line breaks or hyphenation.
+- Do not touch other line breaks or hyphenation (see the exception below).
+
+**Exception, ICDAR collections (`icdar2017-*`, `icdar2019-*`):** in the reference, a line break sometimes falls in the middle of a word (for example `exam` + line break + `ple`). Remove the line break so that the word is whole (`example`). Delete only the line break (do not add a space or a hyphen); a line break between two words stays as it is. If the break splits a word together with a hyphen, do not decide it yourself: leave it and note the unit, so that we can agree on one rule.
 
 ## 4. How to work on a unit
 
