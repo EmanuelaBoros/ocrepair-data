@@ -48,9 +48,15 @@ for src in sorted(set(C["edits"]) | set(C["corrected"]) | set(C.get("discarded",
     out = os.path.join(a.data, new, rel)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     lines = []
-    for line in open(inp, encoding="utf-8"):
+    src_lines = open(inp, encoding="utf-8").read().splitlines()
+    ids = [json.loads(l)["document_metadata"]["document_id"] for l in src_lines if l.strip()]
+    dup = {i for i in ids if ids.count(i) > 1}   # two units with one document id: the edits are stored by id and would be applied to both, so these units are left as they are
+    if dup: print("  skipped (document id shared by two units):", sorted(dup)[:3], "in", src)
+    for line in src_lines:
+        if not line.strip(): continue
         r = json.loads(line)
         did = r["document_metadata"]["document_id"]
+        if did in dup: edits = {k: v for k, v in edits.items() if k != did}; ok = ok - {did}; disc = disc - {did}
         g = r["ground_truth"]
         if did in disc:
             n_disc += 1

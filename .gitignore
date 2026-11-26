@@ -208,3 +208,10 @@ __marimo__/
 
 #SAfety exclusion
 #*test*.jsonl
+
+# macOS and working files of the corrections (the journals and safety copies are only for crashes of a run)
+.DS_Store
+**/.DS_Store
+corrections/safety/
+corrections/*.backup-*.json
+corrections/*.journal.jsonl

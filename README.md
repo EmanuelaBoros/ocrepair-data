@@ -2,6 +2,8 @@
 
 This repository takes the data of the [HIPE-OCRepair-2026](https://hipe-eval.github.io/HIPE-OCRepair-2026/) competition and records the modifications made to it in new versions. It is **not** a competition repository: there is no task, submission or leaderboard here. The competition data is kept unchanged in `data/v0.9/`; corrections, additions (such as the data of the ICDAR 2019 post-OCR competition) and the choice of what to keep go into the later versions `data/v0.95/` and `data/v1.0/`. See [Versions in this repository](#versions-in-this-repository).
 
+**Viewer on the web:** once GitHub Pages is on for this repository (Settings, Pages, branch `main`, folder `/ (root)`), the annotation viewer opens at https://emanuelaboros.github.io/ocrepair-data/ (the page is `viewers/index.html`, which reads its data from `viewers/viewer_data/`; your edits stay in your browser).
+
 ## About the original competition
 
 [HIPE-OCRepair-2026](https://hipe-eval.github.io/HIPE-OCRepair-2026/) was an [ICDAR 2026 Competition](https://icdar2026.org/index.php/competitions/) focused on **LLM-assisted OCR post-correction of historical documents**, with a particular emphasis on historical newspapers.
@@ -52,6 +54,7 @@ The release history above describes the **official HIPE-OCRepair-2026 competitio
 | `data/v0.9/` | The official competition data as released (`dta19`, `icdar2017`, `impresso-nzz`, `impresso-snippets`, `overproof`, all languages). **Unchanged.** |
 | `data/v0.95/` | Data held back for now, to be checked later: `de-to-check/` (the German datasets `dta19`, `impresso-nzz` and `impresso-snippets/de`, with reference corrections, plus the ICDAR 2019 German sub-collections that overlap with them) and `other-languages/` (the other ICDAR 2019 languages, see below). |
 | `data/v1.0/` | Current working version, **English and French only**: `icdar2017`, `impresso-snippets`, `overproof` and the added `icdar2019`. In the references of `impresso-snippets` and `overproof` the hyphenation mark `¬` is written as `-`. |
+| `data/v1.1/` | **Newest version.** The same units as `v1.0`, with the references revised by an LLM and rules (no human review yet), English and French only, including `icdar2019`. For training; use `v1.0` or `v0.9` to evaluate against the competition. See [`data/v1.1/README.md`](data/v1.1/README.md). |
 
 #### ICDAR 2019 post-OCR data
 

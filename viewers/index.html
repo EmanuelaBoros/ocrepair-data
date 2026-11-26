@@ -1,0 +1,217 @@
+<!doctype html><html><head><meta charset="utf-8"><title>OCR word labels</title><style>
+body{font:15px/1.5 -apple-system,Helvetica,Arial,sans-serif;margin:0;background:#fafafa;color:#111;display:flex;flex-direction:column;height:100vh}
+header{background:#fff;border-bottom:1px solid #ddd;padding:10px 18px}
+button{font-size:14px;margin-right:8px;padding:3px 6px}
+#wrap{flex:1;display:grid;grid-template-columns:200px 250px 1fr 270px;min-height:0}
+.lst{overflow:auto;background:#fff;border-right:1px solid #ddd;padding:6px 0}
+h3{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#666}
+.lst h3{padding:4px 12px;margin:0}
+.it{padding:4px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #f0f0f0}
+.it:hover{background:#f3f3f3}.it.sel{background:#e4e4e4;font-weight:600}.it small{color:#777;display:block;font-weight:400}
+.it.ed{border-left:3px solid #d97706}.it.ok{border-left:3px solid #16a34a;background:#f0fdf4}
+.grp{padding:6px 12px 2px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#888}
+main{overflow:auto;padding:18px}
+.box{background:#fff;border:1px solid #ddd;border-radius:6px;padding:14px 16px;margin-bottom:14px;white-space:pre-wrap;word-wrap:break-word}
+.w{border-radius:3px;padding:0 1px;cursor:default}.u{}.e{background:#f5b7b1}.r{background:#aed6f1}.i{background:#f9e79f;outline:1px solid #d4ac0d}.d{background:#fadbd8;outline:1px dashed #c0392b}
+.it.dis{border-left:3px solid #c0392b;background:#fdecea}.it.dis small{color:#c0392b}#disc.on{background:#c0392b;color:#fff}.dim .u{opacity:.45}.leg span{display:inline-block;margin-right:14px;padding:0 6px;border-radius:3px}
+.stats{color:#555;font-size:13px;margin-top:6px}
+#sus{border-right:0;border-left:1px solid #ddd}.sit{padding:5px 12px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:13px}.sit:hover{background:#f3f3f3}
+.sit b{font-family:ui-monospace,Menlo,monospace}.sit small{color:#777;display:block}.sit .rc{color:#b45309}.prog{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pg{position:relative;overflow:hidden;border:1px solid #d4d4d8;border-radius:6px;padding:2px 8px;font-size:12px;cursor:pointer;background:#fff}
+.pg:hover{border-color:#6366f1}.pg i{position:absolute;left:0;bottom:0;height:3px;background:#16a34a}.pg em{font-style:normal;color:#16a34a;font-weight:600}.pg s{text-decoration:none;color:#d97706}.pg.all{background:#f0fdf4;border-color:#86efac}
+dialog{width:min(1100px,94vw);border:1px solid #999;border-radius:10px;padding:16px;box-shadow:0 8px 40px rgba(0,0,0,.35)}dialog::backdrop{background:rgba(0,0,0,.35)}.drow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:8px 0}.djv{border:2px solid #9ca3af;border-radius:6px;padding:8px 10px;margin:6px 0;font-size:14px}.djv.good{border-color:#16a34a;background:#f0fdf4}.djv.bad{border-color:#dc2626;background:#fef2f2}.djv.unsure{border-color:#d97706;background:#fffbeb}.djv li{margin:2px 0}.dst{background:#f3f4f6;border-radius:6px;padding:8px 10px;font-size:14px;margin:8px 0}.dst.err{background:#fee2e2;color:#991b1b}.dst.ok{background:#dcfce7;color:#166534}.dcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}.dcols textarea{width:100%;height:42vh;font:14px/1.5 Georgia,serif;box-sizing:border-box;padding:8px}.dchg{font-size:13px;max-height:16vh;overflow:auto;margin:6px 0}.dchg span.lt{background:#fef3c7;padding:0 3px;border-radius:3px}.dchg div{padding:1px 0}.bn{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:99;max-width:70vw;padding:12px 18px;border-radius:8px;font-size:15px;box-shadow:0 4px 16px rgba(0,0,0,.25);background:#1f2937;color:#fff;cursor:pointer}.bn.err{background:#b91c1c}.bn.ok{background:#15803d}.bn small{display:block;opacity:.8;margin-top:4px}.rej{color:#6b7280;font-size:12px;padding:4px 12px}.rej summary{cursor:pointer}.llm{border-top:2px solid #6366f1}.llm h3{color:#4338ca}.cf{font-size:11px;border-radius:8px;padding:0 6px;margin-left:4px}.cf.high{background:#fee2e2;color:#991b1b}.cf.medium{background:#fef3c7;color:#92400e}.cf.low{background:#e5e7eb;color:#374151}.lt{font-family:ui-monospace,Menlo,monospace}.sgs{margin-top:3px}button.sg{font:12px ui-monospace,Menlo,monospace;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1px 6px;margin:2px 4px 0 0;cursor:pointer}button.sg:hover{background:#dcfce7}
+.w.sus{text-decoration:underline wavy #d97706;text-underline-offset:3px}.w.flash{outline:3px solid #f59e0b;background:#fde68a!important}
+#ref:focus{box-shadow:0 0 0 2px #93c5fd;border-radius:3px}#done.on{background:#16a34a;color:#fff}
+.xa{background:#fadbd8;border-radius:3px}.xb{background:#bbf7d0;border-radius:3px}.cmpn{color:#555;font-size:13px;margin:0 0 6px}#cmpbox .box{max-height:260px;overflow:auto}
+.it.llm:not(.ed):not(.ok):not(.dis){border-left:3px solid #7c3aed;background:#f5f3ff}.it small .lm{color:#7c3aed;font-weight:600}
+.pg .lm{color:#7c3aed;font-weight:600}
+</style></head><body>
+<dialog id=dlg><form method=dialog onsubmit="return false"><h3 style="margin:0 0 8px">Correct this unit with an LLM</h3>
+<div class=drow><label>model <input id=lmodel size=26 placeholder="model id from your OpenAI account"></label> <label>effort <select id=leffort><option>low<option>medium<option selected>high</select></label> <label>API key <input id=lkey type=password size=26 placeholder="kept for this tab only" autocomplete=off></label> <button id=dgo type=button>Propose correction</button> <button id=djg type=button title="ask the model for a verdict only: is the text correct or not? It does not change anything">Judge: is the text correct?</button></div><div id=djv class=djv style="display:none"></div>
+<div id=dst class=dst>Fill in the three fields and press &ldquo;Propose correction&rdquo;. The model only fixes clear errors; it must not add words, modernise spellings or add quotation marks.</div>
+<div class=dcols><div><b>Current reference</b><textarea id=dold readonly spellcheck=false></textarea></div><div><b>Proposed correction (you can edit it)</b><textarea id=dnew spellcheck=false></textarea></div></div>
+<div id=dchg class=dchg></div>
+<div class=drow style="justify-content:flex-end"><button id=dno type=button>No, discard</button> <button id=dyes type=button disabled style="background:#16a34a;color:#fff">Yes, use this text</button></div></form></dialog>
+<div id=bn class=bn style="display:none" title="click to close"></div><header><button id=prev>&larr;</button><button id=next>&rarr;</button> <button id=nextllm title="jump to the next unit of this split that the LLM script changed">next LLM edit &#9670;</button> <button id=loadllm title="choose the corrections file written by llm_correct_refs.py (corrections/v1.1-llm_ref-corrections.json) to see the LLM results in this page">Load LLM corrections</button><input type=file id=llmfile accept=".json" hidden> <label>version <input id=ver value="v1.1" size=6></label> <button id=save>Save corrections</button> <button id=revert>Revert this unit</button> <button id=done>Mark unit fully corrected</button> <button id=disc title="the reference is very different from the OCR (wrong text, other page): flag the unit to be discarded">Discard unit: reference very different from the OCR</button> <button id=ask title="ask an OpenAI model to correct the whole unit; you review the result before it is used">Correct whole unit (LLM)...</button> <span id=msg style="color:#555;font-size:13px"></span>
+<label><input type=checkbox id=dim checked> dim unchanged words</label>
+<div class=leg style="margin-top:6px"><span class=e>edited</span><span class=r>retokenised (segmentation only)</span><span class=i>inserted (OCR only)</span><span class=d>missing from OCR (reference only)</span><span>unchanged</span><span style="text-decoration:underline wavy #d97706;text-underline-offset:3px">possibly wrong in reference</span></div>
+<div class=prog id=prog></div><div class=stats id=stats></div></header>
+<div id=wrap><div class=lst id=cols></div><div class=lst id=units></div>
+<main><div class=box><h3>OCR (coloured by class)</h3><div id=ocr></div></div><div class=box><h3>Reference (coloured by how OCR did) &mdash; click to edit. This is the version that is saved</h3><div id=ref contenteditable=plaintext-only spellcheck=false style="outline:none"></div></div><div id=cmpbox></div></main><div class=lst id=sus></div></div>
+<script src="viewer_data/llm_review.js"></script>
+<script src="viewer_data/llm_corrected.js"></script>
+<script src="viewer_data/rules_corrected.js"></script>
+<script>
+const LLM=window.LLM||[],llmFor=u=>LLM.filter(e=>e.id==u.id&&e.k==cur);
+const INDEX=[{"k": "icdar2017-en|train", "ds": "icdar2017-en", "split": "train", "f": "icdar2017-en_train", "n": 455, "sus": 3269}, {"k": "icdar2017-en|dev", "ds": "icdar2017-en", "split": "dev", "f": "icdar2017-en_dev", "n": 188, "sus": 1297}, {"k": "icdar2017-en|test", "ds": "icdar2017-en", "split": "test", "f": "icdar2017-en_test", "n": 101, "sus": 351}, {"k": "icdar2017-fr|train", "ds": "icdar2017-fr", "split": "train", "f": "icdar2017-fr_train", "n": 391, "sus": 4232}, {"k": "icdar2017-fr|test", "ds": "icdar2017-fr", "split": "test", "f": "icdar2017-fr_test", "n": 100, "sus": 512}, {"k": "icdar2019-en|train", "ds": "icdar2019-en", "split": "train", "f": "icdar2019-en_train", "n": 148, "sus": 1902}, {"k": "icdar2019-en|test", "ds": "icdar2019-en", "split": "test", "f": "icdar2019-en_test", "n": 48, "sus": 606}, {"k": "icdar2019-fr|train", "ds": "icdar2019-fr", "split": "train", "f": "icdar2019-fr_train", "n": 2257, "sus": 18498}, {"k": "icdar2019-fr|test", "ds": "icdar2019-fr", "split": "test", "f": "icdar2019-fr_test", "n": 592, "sus": 4389}, {"k": "impresso-snippets-en|train", "ds": "impresso-snippets-en", "split": "train", "f": "impresso-snippets-en_train", "n": 50, "sus": 63}, {"k": "impresso-snippets-en|dev", "ds": "impresso-snippets-en", "split": "dev", "f": "impresso-snippets-en_dev", "n": 10, "sus": 13}, {"k": "impresso-snippets-en|test", "ds": "impresso-snippets-en", "split": "test", "f": "impresso-snippets-en_test", "n": 100, "sus": 98}, {"k": "impresso-snippets-fr|train", "ds": "impresso-snippets-fr", "split": "train", "f": "impresso-snippets-fr_train", "n": 50, "sus": 80}, {"k": "impresso-snippets-fr|dev", "ds": "impresso-snippets-fr", "split": "dev", "f": "impresso-snippets-fr_dev", "n": 10, "sus": 21}, {"k": "impresso-snippets-fr|test", "ds": "impresso-snippets-fr", "split": "test", "f": "impresso-snippets-fr_test", "n": 100, "sus": 131}, {"k": "overproof-combined-en|train", "ds": "overproof-combined-en", "split": "train", "f": "overproof-combined-en_train", "n": 146, "sus": 735}, {"k": "overproof-combined-en|dev", "ds": "overproof-combined-en", "split": "dev", "f": "overproof-combined-en_dev", "n": 30, "sus": 324}, {"k": "overproof-combined-en|test", "ds": "overproof-combined-en", "split": "test", "f": "overproof-combined-en_test", "n": 32, "sus": 158}],BASE="v1.0";window.D=window.D||{};
+const $=i=>document.getElementById(i);
+const names={u:"unchanged",e:"edited",r:"retokenised",i:"inserted",d:"missing from OCR"};
+const rtitle={u:"correct, matches OCR",r:"correct, OCR split/merged it",e:"correct word the OCR got wrong",d:"correct word missing from the OCR"};
+const EK="ocrepair-ref-edits",CK="ocrepair-ref-done";
+const mig=o=>{const r={};for(const k in o)r[k.replace("hipe-ocrepair-bench_v0.10_","hipe-ocrepair-bench_v1.0_")]=o[k];return r};   // keep marks made before the folder was renamed to v1.0
+let E=mig(JSON.parse(localStorage.getItem(EK)||"{}")),C=mig(JSON.parse(localStorage.getItem(CK)||"{}"));const DK="ocrepair-ref-discard";let X=mig(JSON.parse(localStorage.getItem(DK)||"{}"));
+const persist=()=>{localStorage.setItem(EK,JSON.stringify(E));localStorage.setItem(CK,JSON.stringify(C));localStorage.setItem(DK,JSON.stringify(X))};
+let cur=null,ui=0;
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const units=()=>D[cur]||[];
+const uk=u=>u.src+"#"+u.id;
+const SRCDS=s=>{const m=s.match(/_v[\d.]+_(.+?)_v[\d.]+_(?:train|dev|test)_([a-z]{2})\.jsonl$/);return m?m[1]+"-"+m[2]:null};
+function renderProg(){const tot={},ok={},ed={};for(const x of INDEX)tot[x.ds]=(tot[x.ds]||0)+x.n;
+for(const k in C)if(C[k]){const d=SRCDS(k.slice(0,k.indexOf("#")));if(d)ok[d]=(ok[d]||0)+1}
+for(const k in E){const d=SRCDS(k.slice(0,k.indexOf("#")));if(d)ed[d]=(ed[d]||0)+1}
+let a=0,b=0,c=0;for(const d in tot){a+=tot[d];b+=ok[d]||0;c+=ed[d]||0}
+const lc={};for(const k in LLMT)if(LLMT[k]){const d=k.split("|")[0];lc[d]=(lc[d]||0)+1}const lt=Object.values(lc).reduce((x,y)=>x+y,0);
+const chip=(d,n,o,e,all,l)=>`<span class="pg${o==n&&n>0?" all":""}${all?" tot":""}" data-ds="${d}" title="${o} of ${n} units marked fully corrected, ${e} units edited">${all?"<b>all datasets</b>":"<b>"+d+"</b>"} <em>${o}</em>/${n}${e?` <s>${e} edited</s>`:""}${l?` <span class=lm title="units changed by the LLM script">&#9670; ${l} LLM</span>`:""}<i style="width:${n?100*o/n:0}%"></i></span>`;
+$("prog").innerHTML=chip("",a,b,c,true,lt)+Object.keys(tot).map(d=>chip(d,tot[d],ok[d]||0,ed[d]||0,false,lc[d])).join("")}
+function renderCols(){let h="",last="";for(const x of INDEX){if(x.ds!==last){h+=`<div class=grp>${x.ds}</div>`;last=x.ds}
+h+=`<div class="it${x.k==cur?" sel":""}" data-k="${x.k}">${x.split}<small>${x.n} units</small></div>`}$("cols").innerHTML="<h3>Collection / split</h3>"+h}
+function renderUnits(){const us=units();$("units").innerHTML=`<h3>Units (${us.length})</h3>`+us.map((u,i)=>{const n=u.w.filter(x=>x[2]!="u").length;
+const lt=LLMT[cur+"\u0001"+u.id];return `<div class="it${i==ui?" sel":""}${lt?" llm":""}${E[uk(u)]!==undefined?" ed":""}${C[uk(u)]?" ok":""}${X[uk(u)]?" dis":""}" data-i="${i}">${i+1}. ${u.id}<small>${n} errors${lt?` <span class=lm>&#9670; LLM edited</span>`:lt===""?" · LLM: no change":""}${C[uk(u)]?" ✔ corrected":""}${X[uk(u)]?" ✖ discarded":""}</small></div>`}).join("")}
+function show(){$("msg").style.color="#555";const u=units()[ui];if(!u)return;let h="",p=0;
+for(const [s,e,c] of u.w){h+=esc(u.ocr.slice(p,s))+`<span class="w ${c}" title="${names[c]}">${esc(u.ocr.slice(s,e))}</span>`;p=e}
+h+=esc(u.ocr.slice(p));$("ocr").innerHTML=h;$("ocr").className=$("dim").checked?"dim":"";
+const ed=E[uk(u)];if(ed!==undefined){$("ref").textContent=ed;$("ref").className="";$("msg").textContent="edited (colours hidden)"}
+else{$("msg").textContent="";const sm=new Set(u.sus.map(x=>x[0]));let g="",q=0;for(const [s,e,c] of u.rw){g+=esc(u.ref.slice(q,s))+`<span class="w ${c}${sm.has(s)?" sus":""}" data-s="${s}" title="${rtitle[c]}">${esc(u.ref.slice(s,e))}</span>`;q=e}
+g+=esc(u.ref.slice(q));$("ref").innerHTML=g;$("ref").className=$("dim").checked?"dim":""}
+const n={};u.w.forEach(x=>n[x[2]]=(n[x[2]]||0)+1);$("stats").textContent=u.w.length+" words: "+["u","e","r","i"].map(k=>names[k]+" "+(n[k]||0)).join(", ")+"  |  error rate "+((1-(n.u||0)/u.w.length)*100).toFixed(1)+"%";
+$("disc").className=X[uk(u)]?"on":"";$("disc").textContent=X[uk(u)]?"✖ Unit discarded (click to undo)":"Discard unit: reference very different from the OCR";$("done").className=C[uk(u)]?"on":"";$("done").textContent=C[uk(u)]?"✔ Unit fully corrected (click to undo)":"Mark unit fully corrected";
+renderCmp(u);renderSus(u,ed!==undefined);renderUnits();renderProg();const s=document.querySelector("#units .sel");if(s)s.scrollIntoView({block:"nearest"})}
+const RULEST=window.RULEST||{};   // RULEST[key] = LLM version (or original) + the rules of rule_correct_refs.py, or "" when the rules changed nothing
+const LLMT=window.LLMT||{};let LLMT_MODEL=window.LLMT_MODEL||"LLM";   // LLMT[collection|split + \u0001 + unit id] = the full corrected reference of the script, or "" when it proposed no change
+function wdiff(a,b){const x=a.split(/(\s+)/),y=b.split(/(\s+)/),n=x.length,m=y.length;if(n*m>1.5e7)return [esc(a),esc(b),null];   // too long to compare word by word
+const w=m+1,L=new Uint16Array((n+1)*w);for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)L[i*w+j]=x[i]===y[j]?L[(i+1)*w+j+1]+1:Math.max(L[(i+1)*w+j],L[i*w+j+1]);
+const mk=(t,c)=>/^\s*$/.test(t)?esc(t):`<span class=${c}>${esc(t)}</span>`;let i=0,j=0,ha="",hb="",ch=0;
+while(i<n&&j<m){if(x[i]===y[j]){ha+=esc(x[i]);hb+=esc(y[j]);i++;j++}else if(L[(i+1)*w+j]>=L[i*w+j+1]){ha+=mk(x[i],"xa");i++}else{hb+=mk(y[j],"xb");if(!/^\s*$/.test(y[j]))ch++;j++}}
+while(i<n)ha+=mk(x[i++],"xa");while(j<m){hb+=mk(y[j],"xb");if(!/^\s*$/.test(y[j]))ch++;j++}return [ha,hb,ch]}
+function renderCmp(u){const el=$("cmpbox");if(!el)return;const k=cur+"\u0001"+u.id,t=LLMT[k],mine=E[uk(u)],changed=mine!==undefined&&mine!==u.ref;let h="";
+const ed=(id,html)=>`<div id=${id} contenteditable=plaintext-only spellcheck=false style="outline:none">${html}</div>`;
+const btn=id=>`<button id=${id} style="background:#16a34a;color:#fff">Use this one as the true reference</button>`;
+h+=`<div class=box><h3>Original reference (ground truth, ${esc(BASE)}) &mdash; editable</h3><div class=cmpn>${changed?"The words you changed are marked in red. ":""}${btn("usegt")}</div>${ed("gtbox",changed?wdiff(u.ref,mine)[0]:esc(u.ref))}</div>`;
+if(t===undefined)h+=`<div class=box><h3>${esc(LLMT_MODEL)} reference</h3><div class=cmpn>The LLM script has not been run for this unit.</div></div>`;
+else if(t===""||t===u.ref)h+=`<div class=box><h3>${esc(LLMT_MODEL)} reference</h3><div class=cmpn>The LLM proposed no change for this unit.</div></div>`;
+else{const d=wdiff(u.ref,t);h+=`<div class=box><h3>${esc(LLMT_MODEL)} reference (full corrected text) &mdash; editable</h3><div class=cmpn>${d[2]===null?"too long to mark the changes":d[2]+" changed word(s), marked in green"} ${btn("usellm")}</div>${ed("llmbox",d[1])}</div>`}
+const rt=RULEST[k];if(rt){const base=(t&&t!==u.ref)?t:u.ref,d=wdiff(base,rt);h+=`<div class=box><h3>Rules on top of ${base===u.ref?"the original reference":"the "+esc(LLMT_MODEL)+" version"} (rule-based) &mdash; editable</h3><div class=cmpn>${d[2]===null?"too long to mark the changes":d[2]+" changed word(s), marked in green (line-end hyphens and &not; marks inside words)"} ${btn("userules")}</div>${ed("rulebox",d[1])}</div>`}
+el.innerHTML=h;
+const use=(id,box)=>{const b=$(id);if(b)b.onclick=()=>{const x=$(box).textContent;if(x===u.ref)delete E[uk(u)];else E[uk(u)]=x;persist();show();banner("This text is now the reference of the unit"+(x===u.ref?" (the original)":""),"ok")}};use("usegt","gtbox");use("usellm","llmbox");use("userules","rulebox")}
+const NAMEJ=/^hipe-ocrepair-bench_v[\d.]+_(.+?)_v[\d.]+_(train|dev|test)_([a-z]{2})\.jsonl$/;
+function loadLLMFile(C){for(const k in LLMT)delete LLMT[k];for(let i=LLM.length-1;i>=0;i--)if(LLM[i].src=="gpt")LLM.splice(i,1);   // replaces what an earlier file put in
+LLMT_MODEL=C.model||"LLM";let units=0,edited=0;
+for(const src in C.llm_log||{}){const m=NAMEJ.exec(src.split("/").pop());if(!m)continue;const k=m[1]+"-"+m[3]+"|"+m[2];
+ for(const id in C.llm_log[src]){const t=((C.edits||{})[src]||{})[id];LLMT[k+"\u0001"+id]=t===undefined?"":t;units++;if(t!==undefined)edited++;
+  for(const e of C.llm_log[src][id].applied||[])LLM.push({k,id,find:e.find,rep:e.replace,conf:e.confidence,why:(e.reason?e.reason+" ":"")+"["+LLMT_MODEL+"]",src:"gpt"})}}
+return {units,edited}}
+const RC={chars:"odd characters / glued words",near:"one letter from a common word",rare:"seen once; OCR reads it differently"};
+function renderSus(u,edited){$("sus").innerHTML=`<h3>Possibly wrong in reference (${u.sus.length})</h3>`+
+u.sus.slice().sort((a,b)=>(b[3].length>0)-(a[3].length>0)||(b[2].split(",").length-a[2].split(",").length)||a[0]-b[0]).map(x=>`<div class=sit data-s="${x[0]}"><b>${esc(u.ref.slice(x[0],x[1]))}</b><small class=rc>${x[2].split(",").map(c=>RC[c]).join("; ")}</small>${x[3].length?`<div class=sgs>${x[3].map((v,i)=>`<button class=sg data-s="${x[0]}" data-i="${i}" title="click to use this in the reference">${esc(v)}</button>`).join("")}</div>`:""}</div>`).join("")+renderLLM(u)}
+const LLM_RULES=`You check the reference (ground-truth) transcription of a historical document that is used to evaluate OCR post-correction. Propose only corrections of clear, certain errors in the REFERENCE text, such as a typo, a swapped or missing letter, or a missing space after punctuation.
+Strict rules:
+- Be conservative. If you are not sure, propose nothing. An empty list is a good answer.
+- Do not add words. Do not delete words.
+- Do not modernise or normalise anything. Keep historical spellings, archaic and dialect forms, long s, ligatures, diacritics and combining accents, capitalisation, abbreviations and the punctuation habits of the period, even where they look wrong today.
+- Do not add quotation marks or any other quotes, and do not change existing ones.
+- Do not change numbers, names or dates unless the OCR text clearly shows that the reference has a typo.
+- Do not touch line breaks or hyphenation.
+Reply with JSON only: {"edits":[{"find":"...","replace":"...","reason":"...","confidence":"high|medium|low"}]}. "find" must be copied exactly from the reference, must occur exactly once in it, and should be as short as possible (a word, or a few characters with the neighbouring letters if needed).`;
+const llmInput=(ref,ocr)=>"REFERENCE TEXT:\n"+ref+"\n\nOCR TEXT (noisy; for comparison only, do not copy its errors):\n"+ocr+"\n\nReply with JSON only, in the format {\"edits\":[{\"find\":\"...\",\"replace\":\"...\",\"reason\":\"...\",\"confidence\":\"high|medium|low\"}]}. Use {\"edits\":[]} if nothing needs correcting.";
+const QUOTES=/["\u201c\u201d\u201e\u00ab\u00bb]/g,sq=s=>s.replace(/\s+/g,""),nw=s=>s.trim().split(/\s+/).filter(Boolean).length;
+function llmValidate(edits,text){const ok=[],bad=[];for(const e of edits){const f=String(e.find||""),r=String(e.replace==null?"":e.replace);let why="";
+if(!f||f===r)why="no change";else{const n=text.split(f).length-1;
+if(n==0)why="text not found in the reference";else if(n>1)why="text occurs "+n+" times (ambiguous)";
+else if(sq(r)!==sq(f)&&nw(r)>nw(f))why="adds a word";
+else if((r.match(QUOTES)||[]).length>(f.match(QUOTES)||[]).length)why="adds a quotation mark"}
+(why?bad:ok).push({find:f,rep:r,why:String(e.reason||""),conf:["high","medium","low"].includes(e.confidence)?e.confidence:"low",reject:why})}return {ok,bad}}
+const llmText=d=>d.output_text||(d.output||[]).flatMap(o=>o.content||[]).filter(c=>c.type=="output_text").map(c=>c.text).join("");
+let bnT=0;function banner(text,kind,sub){const b=$("bn");b.className="bn "+(kind||"");b.innerHTML=esc(text)+(sub?"<small>"+esc(sub)+"</small>":"");b.style.display="block";clearTimeout(bnT);if(kind!="err")bnT=setTimeout(()=>{b.style.display="none"},12000)}
+const LIVEK="ocrepair-live-llm";let REJ={};
+const saveLive=()=>{const o={};for(const e of LLM)if(e.live)(o[e.k+"\u0001"+e.id]=o[e.k+"\u0001"+e.id]||[]).push(e);localStorage.setItem(LIVEK,JSON.stringify(o))};
+try{const o=JSON.parse(localStorage.getItem(LIVEK)||"{}");for(const k in o)LLM.push(...o[k])}catch(_){}
+const dst=(h,k)=>{$("dst").className="dst "+(k||"");$("dst").innerHTML=h};
+function openDlg(){const u=units()[ui];if(!u)return;const text=E[uk(u)]!==undefined?E[uk(u)]:u.ref;$("dold").value=text;$("dnew").value="";$("dchg").innerHTML="";$("djv").style.display="none";$("dyes").disabled=true;
+dst("Fill in the three fields and press &ldquo;Propose correction&rdquo;. The model only fixes clear errors; it must not add words, modernise spellings or add quotation marks.");$("dlg").showModal()}
+async function askLLM(){const u=units()[ui];if(!u)return;const model=$("lmodel").value.trim(),key=$("lkey").value.trim();
+if(!model||!key){dst("Enter the model id and your API key first.","err");return}
+localStorage.setItem("ocrepair-llm-model",model);localStorage.setItem("ocrepair-llm-effort",$("leffort").value);sessionStorage.setItem("ocrepair-llm-key",key);
+const text=$("dold").value,btn=$("dgo"),t0=Date.now(),eff=$("leffort").value;btn.disabled=true;$("dyes").disabled=true;$("dchg").innerHTML="";
+const tick=setInterval(()=>dst("Asking "+esc(model)+" ("+eff+")... "+Math.round((Date.now()-t0)/1000)+" s. At high effort this can take a minute or more."),500);
+try{const r=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
+body:JSON.stringify({model,reasoning:{effort:eff},instructions:LLM_RULES,input:llmInput(text,u.ocr),text:{format:{type:"json_object"}}})});
+const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
+const raw=llmText(d);console.log("LLM answer",d);let edits;try{edits=JSON.parse(raw).edits||[]}catch(_){throw new Error("the answer was not valid JSON: "+raw.slice(0,150))}
+const {ok,bad}=llmValidate(edits,text);
+const pos=ok.map(e=>({...e,at:text.indexOf(e.find)})).sort((a,b)=>b.at-a.at);let out=text,last=1e12,used=[],skip=[];
+for(const e of pos){if(e.at+e.find.length>last){skip.push({...e,reject:"overlaps another edit"});continue}out=out.slice(0,e.at)+e.rep+out.slice(e.at+e.find.length);last=e.at;used.push(e)}
+used.reverse();$("dnew").value=out;
+const rows=used.map(e=>`<div>&#10003; <span class=lt>${esc(e.find)}</span> &rarr; <span class=lt>${esc(e.rep)}</span> <small>${esc(e.conf)}${e.why?": "+esc(e.why):""}</small></div>`).concat(bad.concat(skip).map(e=>`<div style="color:#6b7280">&#10007; <span class=lt>${esc(e.find)}</span> &rarr; <span class=lt>${esc(e.rep)}</span> <small>rejected: ${esc(e.reject)}</small></div>`));
+$("dchg").innerHTML=rows.join("");$("dyes").disabled=false;
+dst(!edits.length?esc(model)+" found nothing to correct (it was told to be conservative). The proposed text is the same as the current one.":used.length+" change(s) proposed"+(bad.length+skip.length?", "+(bad.length+skip.length)+" rejected by the safety checks":"")+". Edit the right-hand text if you like, then answer Yes or No.",used.length?"ok":"")
+}catch(err){console.error(err);let m="LLM request failed: "+(err&&err.message?err.message:err);if(/Failed to fetch|NetworkError|Load failed/i.test(m))m+=" (the browser could not reach api.openai.com: check your connection, a blocker extension, and the browser console)";dst(esc(m),"err")}
+finally{clearInterval(tick);btn.disabled=false}}
+const JUDGE_RULES=`You are a strict but fair judge of the transcription quality of a historical document. You are given a TEXT (a ground-truth transcription that is used to evaluate OCR post-correction) and the noisy OCR output of the same passage for comparison. Decide whether the TEXT is correct.
+Rules:
+- Historical spellings, archaic and dialect forms, long s, ligatures, combining accents, old capitalisation, abbreviations and period punctuation are NOT errors. Do not judge against modern orthography.
+- An error is a clear typo, a swapped, missing or extra letter, a wrongly split or glued word, a wrong character, or something that clearly contradicts the OCR text in a way the OCR text makes certain.
+- Do not judge the OCR text; judge only the TEXT.
+- If you are not sure about something, do not list it as an error.
+Verdict: "correct" (no clear errors), "has_errors" (at least one clear error) or "unsure" (you cannot tell).`;
+const judgeInput=(txt,ocr)=>"TEXT TO JUDGE:\n"+txt+"\n\nOCR TEXT (noisy; for comparison only):\n"+ocr+"\n\nReply with JSON only, in the format {\"verdict\":\"correct|has_errors|unsure\",\"confidence\":\"high|medium|low\",\"summary\":\"one sentence\",\"errors\":[{\"text\":\"the exact words from TEXT\",\"problem\":\"what is wrong\",\"suggestion\":\"how it should read\"}]}. Use an empty errors list when the verdict is correct.";
+async function judgeLLM(){const u=units()[ui];if(!u)return;const model=$("lmodel").value.trim(),key=$("lkey").value.trim();
+if(!model||!key){dst("Enter the model id and your API key first.","err");return}
+localStorage.setItem("ocrepair-llm-model",model);localStorage.setItem("ocrepair-llm-effort",$("leffort").value);sessionStorage.setItem("ocrepair-llm-key",key);
+const nw=$("dnew").value,text=nw.trim()?nw:$("dold").value,which=nw.trim()?"the proposed text (right-hand box)":"the current reference",btn=$("djg"),t0=Date.now(),eff=$("leffort").value;btn.disabled=true;$("djv").style.display="none";
+const tick=setInterval(()=>dst("Judging "+which+" with "+esc(model)+" ("+eff+")... "+Math.round((Date.now()-t0)/1000)+" s"),500);
+try{const r=await fetch("https://api.openai.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+key},
+body:JSON.stringify({model,reasoning:{effort:eff},instructions:JUDGE_RULES,input:judgeInput(text,u.ocr),text:{format:{type:"json_object"}}})});
+const d=await r.json();if(!r.ok)throw new Error((d.error&&d.error.message)||("HTTP "+r.status));
+const raw=llmText(d);console.log("LLM judge answer",d);let j;try{j=JSON.parse(raw)}catch(_){throw new Error("the answer was not valid JSON: "+raw.slice(0,150))}
+const v=["correct","has_errors","unsure"].includes(j.verdict)?j.verdict:"unsure",cls=v=="correct"?"good":v=="has_errors"?"bad":"unsure",lab=v=="correct"?"CORRECT":v=="has_errors"?"HAS ERRORS":"UNSURE";
+const errs=(Array.isArray(j.errors)?j.errors:[]).map(e=>({t:String(e.text||""),p:String(e.problem||""),s:String(e.suggestion||"")})),found=errs.filter(e=>e.t&&text.includes(e.t)).length;
+$("djv").className="djv "+cls;$("djv").style.display="block";
+$("djv").innerHTML=`<b>${lab}</b> <small>(confidence: ${esc(j.confidence||"?")}; judged ${esc(which)})</small><div>${esc(j.summary||"")}</div>`+(errs.length?"<ul>"+errs.map(e=>`<li><span class=lt>${esc(e.t)}</span>${e.s?" &rarr; <span class=lt>"+esc(e.s)+"</span>":""}: ${esc(e.p)}${e.t&&!text.includes(e.t)?" <small style='color:#b91c1c'>(not found in the text)</small>":""}</li>`).join("")+"</ul>":"");
+dst("Judge verdict: "+lab+(v=="correct"?". Nothing was changed: the text stays as it is (close this window with No).":v=="has_errors"?". The text was not changed; use Propose correction, or edit the right-hand box yourself.":"."),cls=="good"?"ok":cls=="bad"?"err":"")
+}catch(err){console.error(err);let m="LLM request failed: "+(err&&err.message?err.message:err);if(/Failed to fetch|NetworkError|Load failed/i.test(m))m+=" (the browser could not reach api.openai.com: check your connection, a blocker extension, and the browser console)";dst(esc(m),"err")}
+finally{clearInterval(tick);btn.disabled=false}}
+function acceptDlg(){const u=units()[ui],old=$("dold").value,nw=$("dnew").value;
+if(nw!==old&&(nw.trim().split(/\s+/).length>old.trim().split(/\s+/).length||(nw.match(QUOTES)||[]).length>(old.match(QUOTES)||[]).length)&&!confirm("The new text has more words or more quotation marks than the current one. Use it anyway?"))return;
+if(nw===u.ref)delete E[uk(u)];else E[uk(u)]=nw;persist();$("dlg").close();show();$("msg").textContent=nw===old?"no change":"reference replaced by the reviewed LLM text (you can revert this unit)"}
+function renderLLM(u){const L=llmFor(u),R=REJ[uk(u)]||[];if(!L.length&&!R.length)return "";const rej=R.length?`<details class=rej><summary>${R.length} rejected by the safety checks</summary>${R.map(e=>`<div><span class=lt>${esc(e.find)}</span> &rarr; <span class=lt>${esc(e.rep)}</span>: ${esc(e.reject)}</div>`).join("")}</details>`:"";return `<div class=llm><h3 style="padding:8px 12px 4px">Reviewed by an LLM (${L.length})</h3>`+L.map((e,i)=>`<div class=sit data-llm="${i}"><span class=lt>${esc(e.find)}</span> &rarr; <span class=lt style="color:#15803d">${esc(e.rep)}</span><span class="cf ${e.conf}">${e.conf}</span><small>${esc(e.why)}${e.src?` <i>(${esc(e.src)})</i>`:""}</small><div class=sgs><button class=sg data-llm="${i}" title="replace in the reference">apply</button></div></div>`).join("")+rej+"</div>"}
+function applyLLM(u,i){const e=llmFor(u)[i];if(!e)return;const cur=E[uk(u)]!==undefined?E[uk(u)]:u.ref,q=cur.indexOf(e.find);
+if(q<0){$("msg").textContent="could not find \""+e.find+"\" in the (edited) text";return}
+const t=cur.slice(0,q)+e.rep+cur.slice(q+e.find.length);if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();show();$("msg").textContent="applied: \""+e.find+"\" \u2192 \""+e.rep+"\""}
+function applySugg(u,s,i){const x=u.sus.find(y=>y[0]==s);if(!x)return;const tok=u.ref.slice(x[0],x[1]),rep=x[3][i];
+let n=0,p=-1;while((p=u.ref.indexOf(tok,p+1))>=0&&p<x[0])n++;                       // which occurrence of this token it is
+let cur=E[uk(u)]!==undefined?E[uk(u)]:u.ref,q=-1,k=0;for(;;){q=cur.indexOf(tok,q+1);if(q<0||k++==n)break}
+if(q<0){$("msg").textContent="could not find \""+tok+"\" in the edited text";return}
+const t=cur.slice(0,q)+rep+cur.slice(q+tok.length);if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();show();$("msg").textContent="used \""+rep+"\" for \""+tok+"\"; reference now edited"}
+function load(k){return D[k]?Promise.resolve():new Promise((res,rej)=>{const x=INDEX.find(i=>i.k==k),s=document.createElement("script");
+s.src="viewer_data/"+x.f+".js";s.onload=res;s.onerror=()=>rej(new Error("cannot load "+s.src));document.head.appendChild(s)})}
+async function pick(k){$("msg").textContent="loading "+k+" ...";try{await load(k)}catch(e){$("msg").textContent=e.message;return}
+cur=k;ui=0;renderCols();show()}
+$("prog").onclick=e=>{const p=e.target.closest(".pg");if(!p||!p.dataset.ds)return;const x=INDEX.find(i=>i.ds==p.dataset.ds&&i.split=="train")||INDEX.find(i=>i.ds==p.dataset.ds);if(x)pick(x.k)};
+$("cols").onclick=e=>{const d=e.target.closest(".it");if(d)pick(d.dataset.k)};
+$("units").onclick=e=>{const d=e.target.closest(".it");if(d){ui=+d.dataset.i;show()}};
+$("sus").onclick=e=>{const b=e.target.closest("button.sg");if(b&&b.dataset.llm!==undefined){applyLLM(units()[ui],+b.dataset.llm);return}
+const L=e.target.closest(".sit[data-llm]");if(L&&!b){const u=units()[ui],en=llmFor(u)[+L.dataset.llm],at=u.ref.indexOf(en.find);let best=null;document.querySelectorAll("#ref .w").forEach(x=>{if(+x.dataset.s<=at)best=x});if(best){document.querySelectorAll("#ref .flash").forEach(x=>x.classList.remove("flash"));best.classList.add("flash");best.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>best.classList.remove("flash"),2500)}return}
+if(b){applySugg(units()[ui],+b.dataset.s,+b.dataset.i);return}
+const d=e.target.closest(".sit");if(!d||d.dataset.s===undefined)return;const el=document.querySelector(`#ref .w[data-s="${d.dataset.s}"]`);
+if(!el)return;document.querySelectorAll("#ref .flash").forEach(x=>x.classList.remove("flash"));el.classList.add("flash");el.scrollIntoView({block:"center",behavior:"smooth"});setTimeout(()=>el.classList.remove("flash"),2500)};
+$("ask").onclick=openDlg;$("dgo").onclick=askLLM;$("djg").onclick=judgeLLM;$("dno").onclick=()=>$("dlg").close();$("dyes").onclick=acceptDlg;
+$("lmodel").value=localStorage.getItem("ocrepair-llm-model")||"";$("leffort").value=localStorage.getItem("ocrepair-llm-effort")||"high";$("lkey").value=sessionStorage.getItem("ocrepair-llm-key")||"";
+$("loadllm").onclick=()=>$("llmfile").click();
+$("llmfile").onchange=async ev=>{const f=ev.target.files[0];if(!f)return;try{const r=loadLLMFile(JSON.parse(await f.text()));banner("Loaded "+r.units+" units from "+f.name+": "+r.edited+" changed by the LLM","ok");renderUnits();show()}catch(err){banner("Could not read the file: "+err.message,"err")}ev.target.value=""};
+$("nextllm").onclick=()=>{const us=units();for(let d=1;d<=us.length;d++){const i=(ui+d)%us.length;if(LLMT[cur+"\u0001"+us[i].id]){ui=i;show();return}}banner("No unit of this split was changed by the LLM script","err")};
+$("dim").onchange=show;
+$("ref").oninput=()=>{const u=units()[ui],t=$("ref").textContent;if(t===u.ref)delete E[uk(u)];else E[uk(u)]=t;persist();$("msg").textContent="edited (colours hidden)";renderUnits()};
+$("revert").onclick=()=>{delete E[uk(units()[ui])];persist();show()};
+$("done").onclick=()=>{const k=uk(units()[ui]);if(C[k])delete C[k];else C[k]=1;persist();show()};
+$("disc").onclick=()=>{const k=uk(units()[ui]);if(X[k])delete X[k];else X[k]=1;persist();show()};
+$("save").onclick=()=>{const v=$("ver").value.trim()||"v1.1",out={version:v,base:BASE,edits:{},corrected:{},discarded:{}};
+for(const k in E){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.edits[s]=out.edits[s]||{})[id]=E[k]}
+for(const k in C)if(C[k]){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.corrected[s]=out.corrected[s]||[]).push(id)}
+for(const k in X)if(X[k]){const i=k.indexOf("#"),s=k.slice(0,i),id=k.slice(i+1);(out.discarded[s]=out.discarded[s]||[]).push(id)}
+const nd=Object.values(out.discarded).reduce((a,x)=>a+x.length,0),ne=Object.values(out.edits).reduce((a,x)=>a+Object.keys(x).length,0),nc=Object.values(out.corrected).reduce((a,x)=>a+x.length,0);
+if(!ne&&!nc&&!nd){$("msg").textContent="nothing edited or marked yet";return}
+const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:"application/json"}));a.download=`hipe-ocrepair-bench_${v}_ref-corrections.json`;a.click();
+$("msg").textContent=`saved ${ne} edited, ${nc} fully corrected, ${nd} discarded units`};
+$("prev").onclick=()=>{ui=Math.max(0,ui-1);show()};$("next").onclick=()=>{ui=Math.min(units().length-1,ui+1);show()};
+renderCols();pick((INDEX.find(x=>x.split=="train"&&Object.keys(LLMT).some(k=>k.startsWith(x.k+"\u0001")))||INDEX.find(x=>x.split=="train")||INDEX[0]).k);   // open on a collection that has LLM results
+
+</script></body></html>

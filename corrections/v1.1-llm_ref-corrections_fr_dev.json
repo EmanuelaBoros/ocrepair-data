@@ -1,0 +1,315 @@
+{
+ "version": "v1.1-llm",
+ "base": "v1.0",
+ "edits": {
+  "impresso-snippets/fr/hipe-ocrepair-bench_v1.0_impresso-snippets_v1.0_dev_fr.jsonl": {
+   "EXP-1892-02-12-a-p0005_par16": "J'étais arrivé tard au tribunal; je jetais\nun coup d'oeil et je prêtais l'oreille à la\nporte entrebâillée de la salle d'audience.\nMon fils avait fini sa défense et il me\nplaisait d'entendre comment elle était\nappréciée. Et voici ce qui, dit confidentiellement par la bouche d'un huissier à\nun caporal d'infanterie, perça mon oreille\net me traversa de part en part:",
+   "EDA-1843-08-07-a-p0005_par6": "Le Conseil d'Etat a pris le parti de recourir à la force armée à l'occasion des évènemens qui ont eu lieu dernièrement à St.-Maurice.\nUne compagnie d'Entremont, celle de M. Luder, qui est en ce moment à Lucerne, doit occuper dès le 8 courant la ville de St.-Maurice.\nLe bataillon commandé par M. Morand est mis de piquet, sans doute\npour être mobilisé en cas de résistance. Trois commissaires du gouvernement doivent partir pour St.-Maurice. Ce sont MM. de Kalbermatten, conseiller d'Etat, M. le commandant de la gendarmerie de\nNucé, et M. le châtelain Aloys de Riedmatten. Aucune convocation du\nGrand-Conseil n'est décrétée jusqu'à ce moment. Le Conseil d'Etat\nparait vouloir prendre sur lui la responsabilité des graves mesures\nqu'il vient de prendre.",
+   "EXP-1924-04-22-a-p0006_par14": "MILAN, 21. - Le « Secolo » annonce que\ndans les premiers jours de mai le président du\nconseil se rendra à Caltagirone (Sicile) pour\nassister aux fêtes d'inauguration de la nouvelle ville qui en son honneur sera appelée Mussolinia.\nLe président du conseil sera accompagné du\nmarquis Paolocci de Calboli, citoyen de Caltagirone.\nDans la nouvelle ville, à côté de théâtres,\nd'écoles, d'églises, d'hôtels, etc., on installera\naussi une station d'héliothérapie financée pres-",
+   "EXP-1914-09-19-a-p0003_par18": "BALE, 17. G. R. - Un Suisse domicilié à\nBâle, M. S., a fait aux « Basler Nachrichten ›\nun récit des circonstances dans lesquelles notre\ncompatriote Hennin, comptable à la maison\nDolfuss-Mieg, a été fusillé par les soldats allemands, le 19 août, à Dornach près de Mulhouse.\nM. S., dont la belle-mère possède une maison à\nDornach, non loin de l'endroit où la tragédie\ns'est produite, se porte garant de l'exactitude de\nson récit, attestée par de nombreux témoins oculaires.\nLe jour du drame, M. Hennin, venant de son\nbureau, rentra dans sa maison de la rue de Belfort au moment précis où les avant-postes fran-",
+   "GAZ-1842-08-17-a-p0001_par8": "LE SAINT-BERNARD.\nIl existe au Grand Saint-Bernard, un livre où chaque voyageur peut\ninscrire son nom, et retracer les émotions que doit lui faire éprouver l'aspect d'une nature insensible et glacée, près du saint monastère où de\npieux Cénobites consacrent leur existence à la philanthropie, à la charité.\nÉtant de passage sur cette montagne, j'inscrivis aussi mon nom à côté\nde celui de voyageurs plus illustres et plus fortunés que moi. Curieux de\nle feuilleter, car on en donne la permission, je remarquai l'hymne suivant\nadressé à ces dignes religieux :\nSalut! lieu de repos, espoir de la souffrance,\nToi, qu'en vain n'a jamais imploré l'indigence,\nEt qu'illustrent encor les pages du passé,\nAsyle de bonheur et de saintes prières,\nAu milieu des frimats, sur ces cimes altières.\nDis-moi quelle main t'a placé?",
+   "LLE-1949-05-10-a-p0008_par67": "M. Pittet, il troussa un gentil compliment à\nl'adresse de la Villa Saint-Jean et du Pensionnat de Bertigny, rameaux prospères issus du\nvieux Collège, toujours alerte.\nLe président du Conseil d'Etat se félicita de\nce que Saint-Michel continue à éduquer l'élite\nde nos populations. Il octroya un jour de congé\naux collégiens et, assurés d'exprimer la liesse\nescholière, les convives l'applaudirent avec chaleur.",
+   "GDL-1831-10-04-a-p0003_par11": "APPENZELL.\nOn a voté, le 18 septembre, à Trogen, sur la nouvelle constitution. Il y avait, dit-on, plus de 16 mille personnes ; mais, après\navoir dépouillé le scrutin 8 fois consécutives, sans obtenir de majorité, l'affaire a été ajournée à la landsgemeind du printems\nprochain.\nLUCERNE.\nDans la nuit du 25 septembre, un incendie a consumé à Os-\ntringen une maison de ferme. Les désastres ont été affreux; la\nfemme, les enfans et la servante ont péri dans les flammes; 60\npièces de bétail et toutes les récoltes ont été consumées.",
+   "SDT-1956-03-30-a-p0002_par18": "Connaissance de la peinture, M. Berger, vendredi, 20 h. 15 à 22 h., Ancienne\nAcadémie.\nLittérature romande: le roman en\nSuisse française, M. Perrochon, vendredi,\n20 h. 15 à 21 h., Ancienne Académie.\nLa civilisation égyptienne, M. Maystre, vendredi, 20 h. 15 à 22 h., Ancienne\nAcadémie.\nVevey-Montreux :",
+   "GDL-1866-02-10-a-p0001_par5": "Haut-Unterwald. — Ces jours derniers, à Alpnach,\nune jeune aliénée âgée de 17 ans, dans un accès de folie furieuse, a frappé sa mère, pour laquelle elle montra toujours le plus grand attachement, de deux coups de hache\nsur la tête, et n'a pu être désarmée par les personnes accourues au secours de la victime qu'après une assez vive résistance. Nouvel avertissement de ne jamais se fier à de tels\nmalades et de les placer aussi vite que possible dans des\nmaisons de santé.",
+   "LSE-1891-06-06-a-p0004_par45": "Boeuf, Veau, première qualité.\nSaucisses au foie, bien conditionnées à 60 cent. le demi kilo,\npar 10 kilos, 1 fr. 10 le kilo.\nGraisse de boeuf fondue\nà 50 c. le demi kilo\nSe recommande au public et à\nses amis.\n506 6-2 Ed. SCHNEIDER."
+  }
+ },
+ "corrected": {},
+ "discarded": {},
+ "llm_log": {
+  "impresso-snippets/fr/hipe-ocrepair-bench_v1.0_impresso-snippets_v1.0_dev_fr.jsonl": {
+   "EXP-1892-02-12-a-p0005_par16": {
+    "applied": [
+     {
+      "find": "confiden-\ntiellement",
+      "replace": "confidentiellement",
+      "reason": "Removes a line-end hyphen left over from word division.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 241
+     }
+    ],
+    "rejected": []
+   },
+   "EDA-1843-08-07-a-p0005_par6": {
+    "applied": [
+     {
+      "find": "l'oc-\ncasion",
+      "replace": "l'occasion",
+      "reason": "Remove a line-end hyphenation break within the word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 65
+     },
+     {
+      "find": "mo-\nment",
+      "replace": "moment",
+      "reason": "Remove a line-end hyphenation break within the word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 196
+     },
+     {
+      "find": "gou-\nvernement",
+      "replace": "gouvernement",
+      "reason": "Remove a line-end hyphenation break within the word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 400
+     },
+     {
+      "find": "Kalber-\nmatten",
+      "replace": "Kalbermatten",
+      "reason": "Remove a line-end hyphenation break within the name.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 463
+     }
+    ],
+    "rejected": []
+   },
+   "EXP-1924-04-22-a-p0006_par14": {
+    "applied": [
+     {
+      "find": "nouvel-\nle",
+      "replace": "nouvelle",
+      "reason": "Removes a line-break hyphen within the word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 172
+     },
+     {
+      "find": "Mus-\nsolinia",
+      "replace": "Mussolinia",
+      "reason": "Removes a line-break hyphen within the name.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 221
+     },
+     {
+      "find": "Cal-\ntagirone",
+      "replace": "Caltagirone",
+      "reason": "Removes a line-break hyphen within the place name.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 318
+     }
+    ],
+    "rejected": []
+   },
+   "EXP-1914-09-19-a-p0003_par18": {
+    "applied": [
+     {
+      "find": "alle-\nmands",
+      "replace": "allemands",
+      "reason": "Removes a line-break hyphen within a word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 222
+     },
+     {
+      "find": "ocu-\nlaires",
+      "replace": "oculaires",
+      "reason": "Removes a line-break hyphen within a word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 463
+     },
+     {
+      "find": "Bel-\nfort",
+      "replace": "Belfort",
+      "reason": "Removes a line-break hyphen within a word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 562
+     }
+    ],
+    "rejected": []
+   },
+   "GAZ-1842-08-17-a-p0001_par8": {
+    "applied": [
+     {
+      "find": "as-\npect",
+      "replace": "aspect",
+      "reason": "Removes a line-end hyphenation break within the word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 158
+     },
+     {
+      "find": "Salul!",
+      "replace": "Salut!",
+      "reason": "“Salut!” is the clear French word required by the greeting; the final letter is mistyped.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 560
+     }
+    ],
+    "rejected": []
+   },
+   "LLE-1949-05-10-a-p0008_par67": {
+    "applied": [
+     {
+      "find": "Pension-\nnat",
+      "replace": "Pensionnat",
+      "reason": "Removes a hyphen left over from line-end word division.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 84
+     },
+     {
+      "find": "cha-\nleur",
+      "replace": "chaleur",
+      "reason": "Removes a hyphen left over from line-end word division.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 403
+     }
+    ],
+    "rejected": []
+   },
+   "GDL-1831-10-04-a-p0003_par11": {
+    "applied": [
+     {
+      "find": "cons-\ntitution",
+      "replace": "constitution",
+      "reason": "Remove the line-end hyphen splitting the word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 65
+     },
+     {
+      "find": "aprèsrès",
+      "replace": "après",
+      "reason": "Duplicated letters.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 136
+     },
+     {
+      "find": "ma-\njorité",
+      "replace": "majorité",
+      "reason": "Remove the line-end hyphen splitting the word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 209
+     }
+    ],
+    "rejected": [
+     {
+      "find": "Os-\ntringen",
+      "replace": "Osstringen",
+      "reason": "Remove the line-end hyphen splitting the place name.",
+      "confidence": "high",
+      "rejected": "changes letters while removing a hyphen"
+     }
+    ]
+   },
+   "SDT-1956-03-30-a-p0002_par18": {
+    "applied": [
+     {
+      "find": "Ber-\nger",
+      "replace": "Berger",
+      "reason": "The hyphen is a line-break hyphen within one word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 32
+     },
+     {
+      "find": "Mays-\ntre",
+      "replace": "Maystre",
+      "reason": "The hyphen is a line-break hyphen within one word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 232
+     }
+    ],
+    "rejected": []
+   },
+   "GDL-1866-02-10-a-p0001_par5": {
+    "applied": [
+     {
+      "find": "fu-\nrieuse",
+      "replace": "furieuse",
+      "reason": "Removes a line-end hyphen left over from word wrapping.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 106
+     },
+     {
+      "find": "tou-\njours",
+      "replace": "toujours",
+      "reason": "Removes a line-end hyphen left over from word wrapping.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 162
+     },
+     {
+      "find": "attachement. de",
+      "replace": "attachement, de",
+      "reason": "The period interrupts the sentence; a comma is supported by the OCR and the syntax.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 187
+     },
+     {
+      "find": "accou-\nrues",
+      "replace": "accourues",
+      "reason": "Removes a line-end hyphen left over from word wrapping.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 278
+     },
+     {
+      "find": "résis-\ntance",
+      "replace": "résistance",
+      "reason": "Removes a line-end hyphen left over from word wrapping.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 339
+     },
+     {
+      "find": "sánté",
+      "replace": "santé",
+      "reason": "The acute accent belongs on the final e in the French word santé.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 474
+     }
+    ],
+    "rejected": []
+   },
+   "LSE-1891-06-06-a-p0004_par45": {
+    "applied": [
+     {
+      "find": "Bouf",
+      "replace": "Boeuf",
+      "reason": "The word is missing the e; the same text uses “boeuf” elsewhere.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 0
+     },
+     {
+      "find": "condi-\ntionnées",
+      "replace": "conditionnées",
+      "reason": "The hyphen is a leftover from line-end hyphenation within one word.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 54
+     },
+     {
+      "find": "5o",
+      "replace": "50",
+      "reason": "The price uses the digit 0, not the letter o.",
+      "confidence": "high",
+      "rejected": "",
+      "at": 153
+     }
+    ],
+    "rejected": []
+   }
+  }
+ },
+ "model": "gpt-6-luna"
+}
